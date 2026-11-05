@@ -5,5 +5,26 @@
     <link>https://github.com/a-riceeater/trackswipe</link>
     <description>TrackEdge updates</description>
     <language>en</language>
+    <item>
+      <title>Version 1.1.0</title>
+      <pubDate>Thu, 05 Nov 2026 06:25:24 GMT</pubDate>
+      <sparkle:version>2</sparkle:version>
+      <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[
+<h2>Version 1.1.0</h2>
+<ul>
+<li><b>Automatic Updates</b>: TrackEdge now checks for new versions once a day and can install them for you. Use ⋯ › Check for Updates… to check right away.</li>
+<li><b>Media Strip Indicator</b>: Swipes show what happened on screen. With Spotify and Apple Music you see the song that just started, and whether play/pause actually played or paused.</li>
+<li><b>Typing Palm Rejection</b>: Touches are ignored while you type, so a resting palm no longer changes your volume or brightness.</li>
+<li><b>Lighter Haptics</b>: All strengths are gentler, and precise mode (⇧⌥) uses an extra-light tick.</li>
+<li><b>New Look</b>: A new coral accent and app icon.</li>
+<li>The sliders no longer grab keyboard focus.</li>
+<li>The status dot only appears when something needs attention.</li>
+<li>Tap to Play or Pause now has its own icon.</li>
+</ul>
+      ]]></description>
+      <enclosure url="https://github.com/a-riceeater/trackswipe/releases/download/1.1.0/TrackEdge-1.1.0.zip" length="2444722" type="application/octet-stream" sparkle:edSignature="eckxo4P3KEFVNd3kt6J64zOvKvYoWhZV587nDfxHC65c+T5ZWk8gHrgRRTGaFxsK7Wjuho4Q1NiFDUt5m8K0Dg=="/>
+    </item>
   </channel>
 </rss>
