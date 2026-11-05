@@ -43,7 +43,7 @@ final class HapticEngine: HapticPerforming {
     static let waveforms: [HapticStrength: (normal: Int32, fine: Int32)] = [
         .light: (normal: 2, fine: 1),
         .medium: (normal: 3, fine: 1),
-        .strong: (normal: 4, fine: 2),
+        .strong: (normal: 4, fine: 1),
     ]
 
     static func actuationID(for strength: HapticStrength, fine: Bool) -> Int32? {
