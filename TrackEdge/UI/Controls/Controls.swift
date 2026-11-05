@@ -122,9 +122,6 @@ struct TickSlider: View {
     let valueText: (Double) -> String
 
     @Environment(\.theme) private var theme
-    @FocusState private var focused: Bool
-    /// The ring only appears once the keyboard is used, so the auto-focused slider isn't outlined on open.
-    @State private var keyboardActive = false
 
     private let height: CGFloat = 17
     private let thumbInset: CGFloat = 1.5
@@ -168,22 +165,9 @@ struct TickSlider: View {
             )
         }
         .frame(height: height)
-        .overlay(
-            Capsule().strokeBorder(theme.accent.opacity(focused && keyboardActive ? 0.6 : 0), lineWidth: 1.5)
-        )
-        .focusable()
-        .focused($focused)
-        .onChange(of: focused) { isFocused in
-            if !isFocused { keyboardActive = false }
-        }
-        .onMoveCommand { direction in
-            keyboardActive = true
-            switch direction {
-            case .left, .down: nudge(-1)
-            case .right, .up: nudge(1)
-            default: break
-            }
-        }
+        // Deliberately not keyboard-focusable: as the first focusable control in the popover it would grab
+        // focus on every open (showing the system focus ring) and stray arrow keys would change the value.
+        // VoiceOver can still adjust it through the adjustable action below.
         .accessibilityElement()
         .accessibilityLabel(accessibilityLabel)
         .accessibilityValue(valueText(value))
