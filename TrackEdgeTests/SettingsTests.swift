@@ -30,6 +30,7 @@ final class SettingsTests: XCTestCase {
         XCTAssertTrue(s.freezeCursor)
         XCTAssertTrue(s.fineControl)
         XCTAssertEqual(s.appearance, .light)
+        XCTAssertEqual(s.indicatorStyle, .trackEdge, "TrackEdge's bottom-centre indicator is the default")
         XCTAssertFalse(s.inspectorEnabled, "developer inspector must ship disabled")
         XCTAssertFalse(s.invertY)
     }
@@ -42,6 +43,7 @@ final class SettingsTests: XCTestCase {
         s.edgeWidth = 0.08
         s.appearance = .dark
         s.mediaTapEnabled = true
+        s.indicatorStyle = .system
 
         let reloaded = AppSettings(defaults: defaults)
         XCTAssertEqual(reloaded.hapticStrength, .light)
@@ -50,6 +52,7 @@ final class SettingsTests: XCTestCase {
         XCTAssertEqual(reloaded.edgeWidth, 0.08)
         XCTAssertEqual(reloaded.appearance, .dark)
         XCTAssertTrue(reloaded.mediaTapEnabled)
+        XCTAssertEqual(reloaded.indicatorStyle, .system)
     }
 
     func testOutOfRangeValuesAreClampedAndQuantized() {

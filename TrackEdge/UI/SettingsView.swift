@@ -49,6 +49,12 @@ struct SettingsView: View {
                     SegmentedChoice(options: AppearanceMode.allCases, selection: $settings.appearance,
                                     title: { $0.title }, accessibilityLabel: "Appearance")
                 }
+                SettingRow(symbol: "rectangle.bottomthird.inset.filled", badgeStyle: .neutral, title: "Indicator",
+                           subtitle: settings.indicatorStyle == .trackEdge ? "Bottom of the screen" : "Apple's volume HUD",
+                           titleAccessory: nil) {
+                    PopupMenuButton(options: IndicatorStyle.allCases, selection: $settings.indicatorStyle,
+                                    title: { $0.title }, accessibilityLabel: "Indicator style", width: 94)
+                }
                 SettingRow(symbol: "power", title: "Open at Login", subtitle: loginSubtitle, titleAccessory: nil) {
                     EdgeSwitch(label: "Open at Login", isOn: Binding(
                         get: { model.loginItem.isOn },

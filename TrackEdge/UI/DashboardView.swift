@@ -174,7 +174,7 @@ struct DashboardView: View {
             .padding(.top, 15)
 
             if !model.accessibilityTrusted {
-                AccessibilityHint(action: model.requestAccessibility)
+                AccessibilityHint(systemIndicator: settings.indicatorStyle == .system, action: model.requestAccessibility)
                     .padding(.top, 12)
             }
 
@@ -286,6 +286,7 @@ struct DashboardView: View {
 }
 
 struct AccessibilityHint: View {
+    var systemIndicator = false
     let action: () -> Void
     @Environment(\.theme) private var theme
 
@@ -294,7 +295,7 @@ struct AccessibilityHint: View {
             Image(systemName: "lock.shield")
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(theme.accent)
-            Text("Allow Accessibility for the native HUD and media keys")
+            Text(systemIndicator ? "Allow Accessibility for the macOS HUD and media keys" : "Allow Accessibility for media keys")
                 .font(.system(size: 11))
                 .foregroundColor(theme.secondary)
                 .fixedSize(horizontal: false, vertical: true)

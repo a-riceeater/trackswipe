@@ -68,7 +68,7 @@ struct DiagnosticsView: View {
                 row("Volume", volumeDescription)
                 row("Brightness", brightnessDescription)
                 row("Level route", model.volumeRoute.rawValue)
-                row("Feedback", model.accessibilityTrusted ? "Native macOS HUD (via hardware key events)" : model.osd.route.rawValue)
+                row("Feedback", model.volumeRoute == .systemKeys ? "Apple HUD (via hardware key events)" : model.osd.route.rawValue)
                 row("Media route", model.mediaRoute.rawValue)
                 row("Haptics", model.hapticSupport.description)
                 row("Open at Login", model.loginItem.description)

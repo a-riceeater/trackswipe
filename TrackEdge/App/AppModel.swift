@@ -51,7 +51,8 @@ final class AppModel: ObservableObject {
     #else
     let keys = SystemKeyEmitter()
     #endif
-    let osd = SystemOSDController()
+    let indicatorPreference: IndicatorPreference
+    let osd: SystemOSDController
     let cursor = CursorManager()
     let haptics = HapticEngine()
     let volumeService: VolumeService
@@ -86,6 +87,11 @@ final class AppModel: ObservableObject {
 
     init(settings: AppSettings) {
         self.settings = settings
+        let preference = IndicatorPreference()
+        preference.useSystemHUD = settings.indicatorStyle == .system
+        indicatorPreference = preference
+        let osd = SystemOSDController(preference: preference)
+        self.osd = osd
         volumeService = VolumeService(audio: audio, keys: keys, osd: osd)
         brightnessService = BrightnessService(display: display, keys: keys, osd: osd)
         media = MediaController(keys: keys)
@@ -146,6 +152,7 @@ final class AppModel: ObservableObject {
     // MARK: - Settings → engine
 
     private func applySettings() {
+        indicatorPreference.useSystemHUD = settings.indicatorStyle == .system
         engine.update(config: settings.gestureConfig, invertY: settings.invertY)
         dispatcher.options = ActionDispatcher.Options(freezeCursor: settings.freezeCursor, haptics: settings.hapticStrength)
         setInspectorEnabled(settings.inspectorEnabled && visibleSurfaces > 0)
@@ -330,19 +337,19 @@ final class AppModel: ObservableObject {
     /// the neutral labels.
     private func showMediaFeedback(_ command: MediaCommand, sentAt: Date) {
         guard command == .playPause else {
-            MediaHUD.shared.show(command)
+            IndicatorHUD.shared.show(command)
             playback.waitForChange(after: sentAt.addingTimeInterval(-0.05), timeout: 0.8) { event in
-                if let event, let content = MediaHUD.Content(skip: command, event: event) {
-                    MediaHUD.shared.show(content)
+                if let event, let content = IndicatorHUD.Content(skip: command, event: event) {
+                    IndicatorHUD.shared.show(content)
                 }
             }
             return
         }
         playback.waitForChange(after: sentAt.addingTimeInterval(-0.05), timeout: 0.5) { event in
             if let event {
-                MediaHUD.shared.show(MediaHUD.Content(event))
+                IndicatorHUD.shared.show(IndicatorHUD.Content(event))
             } else {
-                MediaHUD.shared.show(.playPause)
+                IndicatorHUD.shared.show(.playPause)
             }
         }
     }
@@ -374,6 +381,6 @@ final class AppModel: ObservableObject {
         }
     }
 
-    var volumeRoute: ControlRoute { accessibilityTrusted ? .systemKeys : .direct }
+    var volumeRoute: ControlRoute { settings.indicatorStyle == .system && accessibilityTrusted ? .systemKeys : .direct }
     var mediaRoute: MediaController.Route { media.route }
 }

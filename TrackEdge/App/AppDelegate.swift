@@ -54,16 +54,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 if mode == "background" { updates.updater.checkForUpdatesInBackground() } else { updates.checkForUpdates() }
             }
         }
-        // `-debugMediaHUD next|previous|playPause` shows the media indicator at launch (no command is sent).
-        if let raw = UserDefaults.standard.string(forKey: "debugMediaHUD") {
+        // `-debugIndicatorHUD next|previous|playPause|song|volume` shows the indicator at launch (nothing is sent).
+        if let raw = UserDefaults.standard.string(forKey: "debugIndicatorHUD") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                if raw == "song" {
+                if raw == "volume" {
+                    IndicatorHUD.shared.show(IndicatorHUD.Content(level: .volume(muted: false), value: 0.5625))
+                } else if raw == "song" {
                     let sample = PlaybackObserver.Event(app: "Spotify", state: .playing,
                                                         title: "A Fairly Long Song Title (Extended Remix)",
                                                         artist: "Some Artist", date: Date())
-                    if let content = MediaHUD.Content(skip: .next, event: sample) { MediaHUD.shared.show(content) }
+                    if let content = IndicatorHUD.Content(skip: .next, event: sample) { IndicatorHUD.shared.show(content) }
                 } else if let command = MediaCommand(rawValue: raw) {
-                    MediaHUD.shared.show(command)
+                    IndicatorHUD.shared.show(command)
                 }
             }
         }

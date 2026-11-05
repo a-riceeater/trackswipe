@@ -47,6 +47,11 @@ targets:
         SUScheduledCheckInterval: 86400
         SUAllowsAutomaticUpdates: true
     settings:
+      configs:
+        # Debug builds are ad-hoc signed; a separate bundle ID keeps their Accessibility grant,
+        # preferences and login item from colliding with the signed release app.
+        Debug:
+          PRODUCT_BUNDLE_IDENTIFIER: dev.trackedge.TrackEdge.debug
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.trackedge.TrackEdge
         PRODUCT_NAME: TrackEdge

@@ -246,6 +246,7 @@ struct PopupMenuButton<Option: Hashable & Identifiable>: View {
     @Binding var selection: Option
     let title: (Option) -> String
     let accessibilityLabel: String
+    var width: CGFloat = 77
 
     @Environment(\.theme) private var theme
 
@@ -265,7 +266,7 @@ struct PopupMenuButton<Option: Hashable & Identifiable>: View {
             .frame(width: 15, height: 15)
             .padding(.trailing, 2.5)
         }
-        .frame(width: 77, height: 20)
+        .frame(width: width, height: 20)
         .background(
             RoundedRectangle(cornerRadius: 5, style: .continuous)
                 .fill(theme.controlFill)

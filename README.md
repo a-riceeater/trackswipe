@@ -12,7 +12,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/a-riceeater/trackswipe?color=555555" alt="License"></a>
 </p>
 
-TrackEdge is a native macOS menu-bar utility that turns the edges of your trackpad into controls. Slide a finger up or down the **left edge** to change display brightness, or the **right edge** to change volume. Double-tap the **top-right corner** to mute, and swipe along the **bottom edge** to skip tracks. It works in any app, shows macOS's own volume/brightness HUD, and gives a haptic tick for each step.
+TrackEdge is a native macOS menu-bar utility that turns the edges of your trackpad into controls. Slide a finger up or down the **left edge** to change display brightness, or the **right edge** to change volume. Double-tap the **top-right corner** to mute, and swipe along the **bottom edge** to skip tracks. It works in any app, shows each change in an on-screen indicator, and gives a haptic tick for each step.
 
 <p>
   <img src="docs/images/trackedge-dashboard-light.png" width="300" alt="TrackEdge dashboard (light)">
@@ -43,6 +43,7 @@ It's written in Swift and SwiftUI, with AppKit for the status item and panel. It
 | **Sensitivity** | 0.5×–4.0× in 0.25× steps. At 1.0× one step takes 6 mm of finger travel, so 1.5× needs 4 mm. | 1.5× |
 | **Edge Width** | 3%–15% of the trackpad width. | 5% |
 | **Typing palm rejection** | A touch that starts within 0.75 s of a keystroke is ignored until it lifts, and a keystroke during a touch cancels it. A slide cut short by typing within 1.5 s of starting is undone, so a palm settling in to type can't leave the volume or brightness changed. Always on; needs no permission. | On |
+| **Indicator** | Where volume/brightness changes appear: **TrackEdge**, a coral indicator at the bottom of the screen (shared with the Media Strip feedback), or **macOS**, Apple's own HUD (top right on macOS 26; needs Accessibility). | TrackEdge |
 | **Appearance** | App-specific Light/Dark. It doesn't follow the system setting. | Light |
 | **Open at Login** | Backed by `SMAppService.mainApp`. The switch shows the real OS registration state. | Off |
 | **Automatic updates** | Sparkle checks for new versions daily; ⋯ › Check for Updates… checks now. Updates are signature-verified before install. | On |
@@ -85,7 +86,7 @@ xcodebuild ... CODE_SIGN_IDENTITY="Apple Development" CODE_SIGN_STYLE=Manual bui
 
 | Permission | Needed? | What it enables | Without it |
 |---|---|---|---|
-| **Accessibility** | Recommended | Posting system-defined key events (volume, brightness, mute, media keys). macOS then makes the change itself, shows its native HUD, and routes media keys to the Now Playing app. | Volume and brightness are written directly (CoreAudio / DisplayServices). Feedback uses the Apple HUD on macOS 13–15 or a labelled TrackEdge indicator on macOS 26+. Media commands use MediaRemote. |
+| **Accessibility** | Recommended | Posting system-defined key events: media keys, which go to the Now Playing app, and, with the Indicator set to **macOS**, volume/brightness/mute keys so macOS makes the change and shows its own HUD. | Media commands use MediaRemote. With Indicator set to macOS, volume and brightness fall back to direct writes, with Apple's HUD on macOS 13–15 or TrackEdge's indicator on macOS 26+. |
 | **Input Monitoring** | No (on the versions tested) | — | Shown read-only in Diagnostics. If touches never reach the Touch Inspector on some macOS release, grant it and relaunch. |
 
 When Accessibility is missing, the dashboard shows a one-line "Allow" hint. Diagnostics has deep links into System Settings for both permissions.
@@ -104,7 +105,7 @@ MultitouchSupport (private, dlopen)          CGEventSource (modifiers, button)
                        ActionDispatcher ──► VolumeService / BrightnessService / MediaController
                               │                     │            │
                        CursorManager          SystemKeyEmitter   AudioController (CoreAudio)
-                       HapticEngine           (native HUD)       DisplayBrightnessController (DisplayServices)
+                       HapticEngine           (Apple HUD)        DisplayBrightnessController (DisplayServices)
                               │                                  SystemOSDController (OSDManager / fallback)
                               ▼
                         AppModel (@MainActor, ObservableObject) ──► SwiftUI popover / Diagnostics
@@ -126,9 +127,9 @@ MultitouchSupport (private, dlopen)          CGEventSource (modifiers, button)
 
 | Control | Preferred route | Fallback |
 |---|---|---|
-| Volume / mute | Synthesised `NX_KEYTYPE_SOUND_UP/DOWN/MUTE` (⇧⌥ for quarter steps) → native HUD | CoreAudio `VirtualMainVolume` → main-element scalar → per-channel scalar; soft mute if the device has no hardware mute |
-| Brightness | Synthesised `NX_KEYTYPE_BRIGHTNESS_UP/DOWN` → native HUD | `DisplayServicesSetBrightness` on the target display |
-| HUD (fallback route only) | `OSDManager` (macOS 13–15) | Labelled TrackEdge indicator (macOS 26+, where `OSDManager` no longer renders) |
+| Volume / mute | Indicator **TrackEdge** (default): CoreAudio `VirtualMainVolume` → main-element scalar → per-channel scalar, plus TrackEdge's indicator. Soft mute if the device has no hardware mute. | Indicator **macOS**: synthesised `NX_KEYTYPE_SOUND_UP/DOWN/MUTE` (⇧⌥ for quarter steps) → Apple's HUD; direct write if Accessibility is missing |
+| Brightness | Indicator **TrackEdge**: `DisplayServicesSetBrightness` on the target display, plus TrackEdge's indicator | Indicator **macOS**: synthesised `NX_KEYTYPE_BRIGHTNESS_UP/DOWN` → Apple's HUD |
+| Apple HUD without Accessibility | `OSDManager` (macOS 13–15) | TrackEdge's indicator (macOS 26+, where `OSDManager` no longer renders) |
 | Media | Synthesised `NX_KEYTYPE_NEXT/PREVIOUS/PLAY` | `MRMediaRemoteSendCommand` |
 | Haptics | `MTActuatorActuate` on the touching device (waveforms 3/4/6 = Light/Medium/Strong, 1 for all fine steps; IDs aren't ordered by intensity, so tune by feel in `HapticEngine.waveforms`) | `NSHapticFeedbackManager` on Force Touch devices; nothing on older trackpads (no fake sounds) |
 | Cursor freeze | `CGAssociateMouseAndMouseCursorPosition(false)` plus re-pinning with `CGWarpMouseCursorPosition` | — |
@@ -153,7 +154,7 @@ All of these are loaded at runtime with `dlopen`/`dlsym` or `NSClassFromString`.
 |---|---|---|
 | `MultitouchSupport.framework` | Global per-finger touch data; Taptic actuator | `Services/Multitouch/MultitouchBridge.swift` |
 | `DisplayServices.framework` | Read/set display brightness | `Services/System/DisplayBrightnessController.swift` |
-| `OSD.framework` (`OSDManager`) | Native HUD on the direct-write route (macOS 13–15) | `Services/System/SystemOSDController.swift` |
+| `OSD.framework` (`OSDManager`) | Apple's HUD when the Indicator is set to macOS but Accessibility is missing (macOS 13–15) | `Services/System/SystemOSDController.swift` |
 | `MediaRemote.framework` | Media commands when Accessibility is not granted | `Services/System/MediaController.swift` |
 
 The C layout of the touch record lives in `TrackEdge/Bridging/MultitouchTypes.h` and is checked at runtime against a 96-byte stride. No protected system files are modified, and SIP stays on.
@@ -183,7 +184,7 @@ build/DerivedData/Build/Products/Debug/TrackEdge.app/Contents/MacOS/TrackEdge -s
 - All 80 unit tests pass.
 - MultitouchSupport loads, the built-in trackpad starts (121.9 × 74.1 mm), and its Taptic actuator opens.
 - `-selfTest`, through both the key route and the direct route, gave the expected result for every step: volume ±1/16 and ±1/64, brightness ±1/16 and ±1/64. Original values were restored afterwards.
-- Synthesised volume keys show the native macOS 26 volume HUD. `OSDManager` resolves on macOS 26 but renders nothing, which is why macOS 26+ uses the fallback indicator.
+- Synthesised volume keys show the native macOS 26 volume HUD. `OSDManager` resolves on macOS 26 but renders nothing, which is why macOS 26+ uses TrackEdge's indicator when the key route isn't available.
 - The popover was captured in light and dark mode and compared with the design reference.
 
 **Still needs a person with a finger on the trackpad:**
@@ -206,7 +207,7 @@ build/DerivedData/Build/Products/Debug/TrackEdge.app/Contents/MacOS/TrackEdge -s
 
 - Requires private frameworks, so this is a direct-distribution build only. It can't be sandboxed or shipped through the Mac App Store, and a future macOS release could change these frameworks.
 - No DDC/CI, so third-party external monitors can't have their brightness controlled.
-- macOS 26 shows no native HUD on the direct-write route. Grant Accessibility to get the real HUD.
+- On macOS 26, Apple's HUD is only available through key events, so the **macOS** indicator style needs Accessibility.
 - The edge gestures don't swallow input. One-finger motion along an edge still reaches the frontmost app as pointer movement (frozen when Freeze Cursor is on), and a tap-to-click tap in the corner still clicks.
 - The haptic waveform IDs are community-documented values and may feel different across trackpad generations.
 

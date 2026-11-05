@@ -14,6 +14,16 @@ enum HapticStrength: String, CaseIterable, Identifiable, Sendable {
     }
 }
 
+/// Where volume/brightness feedback appears.
+enum IndicatorStyle: String, CaseIterable, Identifiable, Sendable {
+    /// TrackEdge's own indicator, bottom-centre (default).
+    case trackEdge
+    /// Apple's own HUD (needs Accessibility; top-right on macOS 26).
+    case system
+    var id: String { rawValue }
+    var title: String { self == .trackEdge ? "TrackEdge" : "macOS" }
+}
+
 enum AppearanceMode: String, CaseIterable, Identifiable, Sendable {
     case light, dark
     var id: String { rawValue }
@@ -40,6 +50,7 @@ final class AppSettings: ObservableObject {
         static let freezeCursor = "freezeCursor"
         static let fineControl = "fineControl"
         static let appearance = "appearance"
+        static let indicatorStyle = "indicatorStyle"
         static let inspectorEnabled = "debug.touchInspector"
         static let invertY = "debug.invertY"
     }
@@ -58,6 +69,7 @@ final class AppSettings: ObservableObject {
         static let freezeCursor = true
         static let fineControl = true
         static let appearance = AppearanceMode.light
+        static let indicatorStyle = IndicatorStyle.trackEdge
     }
 
     static let sensitivityRange: ClosedRange<Double> = 0.5...4.0
@@ -92,6 +104,7 @@ final class AppSettings: ObservableObject {
     @Published var freezeCursor: Bool { didSet { defaults.set(freezeCursor, forKey: Key.freezeCursor) } }
     @Published var fineControl: Bool { didSet { defaults.set(fineControl, forKey: Key.fineControl) } }
     @Published var appearance: AppearanceMode { didSet { defaults.set(appearance.rawValue, forKey: Key.appearance) } }
+    @Published var indicatorStyle: IndicatorStyle { didSet { defaults.set(indicatorStyle.rawValue, forKey: Key.indicatorStyle) } }
     /// Developer-only live touch inspector. Off by default and never enabled automatically.
     @Published var inspectorEnabled: Bool { didSet { defaults.set(inspectorEnabled, forKey: Key.inspectorEnabled) } }
     /// Developer override for devices that report y in the opposite orientation.
@@ -114,6 +127,7 @@ final class AppSettings: ObservableObject {
         freezeCursor = defaults.object(forKey: Key.freezeCursor) as? Bool ?? Defaults.freezeCursor
         fineControl = defaults.object(forKey: Key.fineControl) as? Bool ?? Defaults.fineControl
         appearance = AppearanceMode(rawValue: defaults.string(forKey: Key.appearance) ?? "") ?? Defaults.appearance
+        indicatorStyle = IndicatorStyle(rawValue: defaults.string(forKey: Key.indicatorStyle) ?? "") ?? Defaults.indicatorStyle
         inspectorEnabled = defaults.object(forKey: Key.inspectorEnabled) as? Bool ?? false
         invertY = defaults.object(forKey: Key.invertY) as? Bool ?? false
     }
@@ -134,6 +148,7 @@ final class AppSettings: ObservableObject {
         freezeCursor = Defaults.freezeCursor
         fineControl = Defaults.fineControl
         appearance = Defaults.appearance
+        indicatorStyle = Defaults.indicatorStyle
         inspectorEnabled = false
         invertY = false
     }

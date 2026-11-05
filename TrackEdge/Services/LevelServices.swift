@@ -23,9 +23,10 @@ protocol MuteControlling: AnyObject {
 
 /// How a level change reaches the system.
 enum ControlRoute: String, Sendable {
-    /// Synthesised hardware keys: exact keyboard behaviour + Apple's own HUD. Needs Accessibility.
-    case systemKeys = "Hardware key events (native HUD)"
-    /// Direct CoreAudio / DisplayServices writes + OSD route from `SystemOSDController`.
+    /// Synthesised hardware keys: exact keyboard behaviour + Apple's own HUD. Needs Accessibility and
+    /// the "macOS" indicator style.
+    case systemKeys = "Hardware key events (macOS HUD)"
+    /// Direct CoreAudio / DisplayServices writes + feedback from `SystemOSDController`.
     case direct = "Direct write"
 }
 
@@ -44,7 +45,10 @@ final class VolumeService: LevelControlling, MuteControlling {
         self.osd = osd
     }
 
-    var route: ControlRoute { keys.isAvailable ? .systemKeys : .direct }
+    /// Hardware-key events (macOS draws its own HUD) only when the "macOS" indicator style is chosen.
+    private var useKeys: Bool { osd.preference.useSystemHUD && keys.isAvailable }
+
+    var route: ControlRoute { useKeys ? .systemKeys : .direct }
 
     func beginAdjust() {
         tracked = audio.snapshot()
@@ -67,7 +71,7 @@ final class VolumeService: LevelControlling, MuteControlling {
         guard snap.deviceID != 0, let current = snap.volume else { return nil }
         defer { tracked = snap }
 
-        let useKeys = keys.isAvailable
+        let useKeys = self.useKeys
         guard snap.canSetVolume else {
             // Fixed-volume output (e.g. HDMI): let macOS show its own "not adjustable" HUD if it can.
             if useKeys { keys.press(steps > 0 ? .soundUp : .soundDown) }
@@ -100,7 +104,7 @@ final class VolumeService: LevelControlling, MuteControlling {
     func toggleMute() -> Bool {
         let snap = audio.snapshot()
         guard snap.deviceID != 0 else { return false }
-        if keys.isAvailable {
+        if useKeys {
             return keys.press(.mute)
         }
         let ok = audio.setMuted(!snap.muted)
@@ -123,7 +127,7 @@ final class BrightnessService: LevelControlling {
         self.osd = osd
     }
 
-    var route: ControlRoute { keys.isAvailable ? .systemKeys : .direct }
+    var route: ControlRoute { osd.preference.useSystemHUD && keys.isAvailable ? .systemKeys : .direct }
 
     func beginAdjust() {
         if let id = display.targetDisplay(), let value = display.read(id) {
@@ -149,7 +153,8 @@ final class BrightnessService: LevelControlling {
         let effective = StepMath.effectiveSteps(steps, from: state.value, fine: fine)
         let next = StepMath.apply(steps: effective, to: state.value, fine: fine)
         // Brightness keys drive the built-in/Apple display; for any other capable display write directly.
-        let useKeys = keys.isAvailable && (CGDisplayIsBuiltin(state.id) != 0 || CGMainDisplayID() == state.id)
+        let useKeys = osd.preference.useSystemHUD && keys.isAvailable
+            && (CGDisplayIsBuiltin(state.id) != 0 || CGMainDisplayID() == state.id)
         if useKeys {
             keys.press(steps > 0 ? .brightnessUp : .brightnessDown, fine: fine, repeatCount: max(abs(effective), 1))
         } else {

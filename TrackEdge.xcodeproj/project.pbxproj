@@ -29,7 +29,6 @@
 		6D039B356BC32EDDCB1691D5 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ED201347DFBC7A9E30C81C /* AppInfo.swift */; };
 		77D89250B7D42A23AB8132BF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F3268661D2BC51F1165A84 /* DashboardView.swift */; };
 		80B3C1056C2BFE643A8737D8 /* LevelServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277D62F74564058CCFA91DE /* LevelServices.swift */; };
-		881D1D0AC6EDD3499EBC9EFD /* MediaHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB5CD31B93EA8AC39A1BE1E /* MediaHUD.swift */; };
 		8A7D27D1096DBFBA60B81DBB /* DeviceWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EFD592457CE25287541B36 /* DeviceWatcher.swift */; };
 		915CD15DAB905953752B4EA4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D718F098DD7A77F07E7493 /* Theme.swift */; };
 		91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */; };
@@ -44,6 +43,7 @@
 		B7C71A42B51E7B14A8AA83A9 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE023D921C5EA711FFC5A6F1 /* AudioController.swift */; };
 		C9E0CA3D29EDC3948B8751A6 /* GestureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9DBBF6DD5F9EE6AFD03B /* GestureEngine.swift */; };
 		D75A81D8F48CDDCE47F4F4C2 /* StepMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F006A9840231040ABCE53C /* StepMath.swift */; };
+		D776383AE0C387083E3C5C5E /* IndicatorHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E67808412DFB21A9C547A73 /* IndicatorHUD.swift */; };
 		D8D56CF82AB38D1740F22DA5 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9352CC77C5F6D391B1AD17 /* SettingsTests.swift */; };
 		DA7BDEAF41DF9D46321B424F /* SystemOSDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC27B05B9E94193261D71AD /* SystemOSDController.swift */; };
 		E0C04F0A2B8BC04F5A612BEF /* Locking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBE697BFEEE6B9AF52BA2DD /* Locking.swift */; };
@@ -71,7 +71,6 @@
 		0865A25EEA6E905DEC91BB32 /* MultitouchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchProvider.swift; sourceTree = "<group>"; };
 		19F3268661D2BC51F1165A84 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		1A207585A9178A7A9A52FDB4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		1AB5CD31B93EA8AC39A1BE1E /* MediaHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaHUD.swift; sourceTree = "<group>"; };
 		1CEB046577CD0A3C3FA07E54 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		295E8D8029DD91B72882E587 /* TrackEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A608222A8340F91914678BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -84,6 +83,7 @@
 		5BBE697BFEEE6B9AF52BA2DD /* Locking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locking.swift; sourceTree = "<group>"; };
 		5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchBridge.swift; sourceTree = "<group>"; };
 		5D99226B0D8C69EF92674C58 /* UpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateController.swift; sourceTree = "<group>"; };
+		5E67808412DFB21A9C547A73 /* IndicatorHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorHUD.swift; sourceTree = "<group>"; };
 		62C8E897A41FAF1761F063A3 /* ControlMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlMappingTests.swift; sourceTree = "<group>"; };
 		674D74C047335DE297614329 /* BackendSelfTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendSelfTest.swift; sourceTree = "<group>"; };
 		73B5BAA9D3CF60E1E0D92E1D /* CursorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorManager.swift; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 			children = (
 				A98AA837DE27706CFA819DC7 /* Brand.swift */,
 				19F3268661D2BC51F1165A84 /* DashboardView.swift */,
-				1AB5CD31B93EA8AC39A1BE1E /* MediaHUD.swift */,
+				5E67808412DFB21A9C547A73 /* IndicatorHUD.swift */,
 				3D5F46D6F0263653CF433992 /* PopoverRootView.swift */,
 				CE62569973F3B7614AD80D18 /* SettingsView.swift */,
 				82D718F098DD7A77F07E7493 /* Theme.swift */,
@@ -410,12 +410,12 @@
 				95C0184F57CFEF9E45EF1888 /* GestureRecognizer.swift in Sources */,
 				29ECB8171EAAAC38DFD306A5 /* GestureTypes.swift in Sources */,
 				014C9077E5344A4497125242 /* HapticEngine.swift in Sources */,
+				D776383AE0C387083E3C5C5E /* IndicatorHUD.swift in Sources */,
 				009161C993245CBA01645C16 /* InputState.swift in Sources */,
 				80B3C1056C2BFE643A8737D8 /* LevelServices.swift in Sources */,
 				E0C04F0A2B8BC04F5A612BEF /* Locking.swift in Sources */,
 				2949C5848F9CCCF8CD5E0A50 /* LoginItemController.swift in Sources */,
 				5E21F9D23E56B543664FFA80 /* MediaController.swift in Sources */,
-				881D1D0AC6EDD3499EBC9EFD /* MediaHUD.swift in Sources */,
 				A7A72F3EE877DA8E9C0E0712 /* MenuBarController.swift in Sources */,
 				91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */,
 				1493EDE536C3E00FB666FBAD /* MultitouchProvider.swift in Sources */,
@@ -644,7 +644,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.trackedge.TrackEdge;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.trackedge.TrackEdge.debug;
 				PRODUCT_NAME = TrackEdge;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "TrackEdge/Bridging/TrackEdge-Bridging-Header.h";

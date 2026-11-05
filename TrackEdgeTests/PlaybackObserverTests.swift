@@ -43,12 +43,12 @@ final class PlaybackObserverTests: XCTestCase {
             let e = try! XCTUnwrap(event)
             XCTAssertEqual(e.title, "Song")
             XCTAssertEqual(e.artist, "Artist")
-            let skip = MediaHUD.Content(skip: .next, event: e)
+            let skip = IndicatorHUD.Content(skip: .next, event: e)
             XCTAssertEqual(skip?.title, "Song")
             XCTAssertEqual(skip?.subtitle, "Artist · Spotify")
             XCTAssertEqual(skip?.symbol, "forward.fill")
-            XCTAssertNil(MediaHUD.Content(skip: .playPause, event: e))
-            XCTAssertEqual(MediaHUD.Content(e).subtitle, "Song · Spotify")
+            XCTAssertNil(IndicatorHUD.Content(skip: .playPause, event: e))
+            XCTAssertEqual(IndicatorHUD.Content(e).subtitle, "Song · Spotify")
             done.fulfill()
         }
         post("com.spotify.client.PlaybackStateChanged", state: "Playing", on: center,
@@ -58,7 +58,7 @@ final class PlaybackObserverTests: XCTestCase {
 
     func testSkipWithoutTrackInfoKeepsGenericLabel() {
         let event = PlaybackObserver.Event(app: "Music", state: .playing, title: nil, artist: nil, date: Date())
-        XCTAssertNil(MediaHUD.Content(skip: .previous, event: event))
+        XCTAssertNil(IndicatorHUD.Content(skip: .previous, event: event))
     }
 
     func testTimesOutWhenNoPlayerReports() {
