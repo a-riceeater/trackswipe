@@ -259,7 +259,7 @@ TrackEdge updates itself with [Sparkle 2](https://sparkle-project.org).
   build/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys -x ~/trackedge-sparkle-private-key
   ```
   Store that file somewhere safe outside the repo. To restore it on another Mac, use `generate_keys -f <file>`.
-- **Verified locally:** an installed 1.1.0 found, downloaded, verified and installed a locally served 1.1.1 and relaunched as 1.1.1. A tampered archive was rejected.
+- **Verified locally:** an installed 1.1.0 found, downloaded and verified a locally served 1.1.1, and was replaced by 1.1.1 (still Developer ID signed) when it quit. A tampered archive was rejected.
 
 ## Renaming
 
