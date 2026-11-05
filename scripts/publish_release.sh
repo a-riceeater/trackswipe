@@ -20,8 +20,9 @@ spctl -a -t open --context context:primary-signature "$DMG" || { echo "DMG is no
 if gh release view "$TAG" >/dev/null 2>&1; then
   gh release upload "$TAG" "$DMG" "$ZIP" --clobber
 else
-  gh release create "$TAG" "$DMG" "$ZIP" --title "TrackEdge $VERSION" --target main \
-    ${NOTES:+--notes-file "$NOTES"} ${NOTES:---generate-notes} --latest
+  NOTES_ARGS=(--generate-notes)
+  [[ -n "$NOTES" ]] && NOTES_ARGS=(--notes-file "$NOTES")
+  gh release create "$TAG" "$DMG" "$ZIP" --title "TrackEdge $VERSION" --target main "${NOTES_ARGS[@]}" --latest
 fi
 
 # Confirm the enclosure is reachable before telling installed apps about it.
