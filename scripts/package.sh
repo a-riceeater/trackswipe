@@ -18,17 +18,21 @@ command -v xcodegen >/dev/null && xcodegen generate >/dev/null
 
 xcodebuild -project TrackEdge.xcodeproj -scheme TrackEdge -configuration Release \
   -archivePath "$ARCHIVE" -derivedDataPath build/DerivedData archive \
-  CODE_SIGN_IDENTITY="$IDENTITY" CODE_SIGN_STYLE=Manual | grep -E "error:|ARCHIVE" || true
+  CODE_SIGN_IDENTITY="-" CODE_SIGN_STYLE=Manual | grep -E "error:|ARCHIVE" || true
 
 APP="$ARCHIVE/Products/Applications/TrackEdge.app"
 [[ -d "$APP" ]] || { echo "Archive failed"; exit 1; }
 
-# Re-sign with hardened runtime + timestamp (required for notarization when using a real identity).
+# Archive ad hoc (no team/provisioning needed), then sign with the real identity here:
+# hardened runtime + secure timestamp are both required for notarization.
 if [[ "$IDENTITY" != "-" ]]; then
   codesign --force --options runtime --timestamp --entitlements TrackEdge/Resources/TrackEdge.entitlements \
     --sign "$IDENTITY" "$APP"
 fi
 codesign --verify --strict --verbose=2 "$APP"
+if [[ "$IDENTITY" != "-" ]]; then
+  codesign -dv "$APP" 2>&1 | grep -E "Authority=Developer ID|TeamIdentifier" || { echo "Not signed with a Developer ID"; exit 1; }
+fi
 
 rm -rf "$DIST" && mkdir -p "$DIST"
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$APP/Contents/Info.plist")
