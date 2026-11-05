@@ -21,6 +21,7 @@ enum TrackEdgeMain {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var model: AppModel?
     private var menuBar: MenuBarController?
+    private var updates: UpdateController?
     private var signalSources: [DispatchSourceSignal] = []
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -31,7 +32,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let model = AppModel(settings: settings)
         self.model = model
         model.start()
-        let menuBar = MenuBarController(model: model, settings: settings)
+        let updates = UpdateController(start: true)
+        self.updates = updates
+        let menuBar = MenuBarController(model: model, settings: settings, updates: updates)
         self.menuBar = menuBar
         installSignalHandlers()
 
@@ -44,6 +47,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 exit(0)
             }
             return
+        }
+        // `-debugCheckUpdates interactive|background` runs a Sparkle check at launch (pair with -debugFeedURL).
+        if let mode = UserDefaults.standard.string(forKey: "debugCheckUpdates") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                if mode == "background" { updates.updater.checkForUpdatesInBackground() } else { updates.checkForUpdates() }
+            }
         }
         // `-debugMediaHUD next|previous|playPause` shows the media indicator at launch (no command is sent).
         if let raw = UserDefaults.standard.string(forKey: "debugMediaHUD") {

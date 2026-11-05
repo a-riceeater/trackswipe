@@ -30,5 +30,15 @@
 	<string>Copyright © 2026 TrackEdge contributors. Apache License 2.0.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUAllowsAutomaticUpdates</key>
+	<true/>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/a-riceeater/trackswipe/main/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>E9S5B6AWYuKhpWQt+Y5Qy6N7sWiPEN/mrbYNKLafzVM=</string>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
 </dict>
 </plist>

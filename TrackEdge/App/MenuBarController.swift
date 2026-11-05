@@ -19,6 +19,7 @@ final class PopoverPanel: NSPanel {
 final class MenuBarController: NSObject {
     private let model: AppModel
     private let settings: AppSettings
+    private let updates: UpdateController
     private let navigation = PanelNavigation()
     private let statusItem: NSStatusItem
     private var panel: PopoverPanel?
@@ -30,9 +31,10 @@ final class MenuBarController: NSObject {
     /// Matches the reference popover height (~556 pt); grows only for optional content.
     private let baseHeight: CGFloat = 556
 
-    init(model: AppModel, settings: AppSettings) {
+    init(model: AppModel, settings: AppSettings, updates: UpdateController) {
         self.model = model
         self.settings = settings
+        self.updates = updates
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         super.init()
 
@@ -99,10 +101,15 @@ final class MenuBarController: NSObject {
         var actions = PanelActions()
         actions.openDiagnostics = { [weak self] in self?.openDiagnostics() }
         actions.about = { [weak self] in self?.showAbout() }
+        actions.checkForUpdates = { [weak self] in
+            self?.closePanel()
+            self?.updates.checkForUpdates()
+        }
         actions.resetSettings = { [weak self] in self?.confirmReset() }
         actions.quit = { [weak self] in self?.quit() }
 
-        let root = PopoverRootView(model: model, settings: settings, navigation: navigation, actions: actions, minimumHeight: baseHeight)
+        let root = PopoverRootView(model: model, settings: settings, navigation: navigation, actions: actions, minimumHeight: baseHeight,
+                                   updates: updates)
         let hosting = NSHostingView(rootView: root)
         hosting.frame = NSRect(x: 0, y: 0, width: Metrics.panelWidth, height: baseHeight)
         panel.contentView = hosting

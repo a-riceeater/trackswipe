@@ -314,10 +314,18 @@ struct AccessibilityHint: View {
 struct MoreMenu: View {
     let actions: PanelActions
     @Environment(\.theme) private var theme
+    @EnvironmentObject private var updates: UpdateController
 
     var body: some View {
         Menu {
             Button("About \(AppInfo.name)", action: actions.about)
+            Button("Check for Updates…", action: actions.checkForUpdates)
+                .disabled(!updates.canCheckForUpdates)
+            Toggle("Automatically Check for Updates", isOn: Binding(
+                get: { updates.automaticallyChecks },
+                set: { updates.setAutomaticallyChecks($0) }
+            ))
+            Divider()
             Button("Diagnostics…", action: actions.openDiagnostics)
             Divider()
             Button("Reset Settings…", action: actions.resetSettings)

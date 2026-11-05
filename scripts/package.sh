@@ -3,7 +3,10 @@
 #
 #   scripts/package.sh                         # ad-hoc signature (local use only)
 #   SIGN_IDENTITY="Developer ID Application: Name (TEAMID)" scripts/package.sh
-#   SIGN_IDENTITY=... NOTARY_PROFILE=my-profile scripts/package.sh   # + notarize & staple app and DMG
+#   SIGN_IDENTITY=... NOTARY_PROFILE=my-profile scripts/package.sh   # + notarize & staple app and DMG,
+#                                                                    #   and add the release to appcast.xml
+#   NOTES_FILE=notes.md  optional release notes (simple markdown) shown in Sparkle's update window
+#   RELEASE_TAG=1.1.0    GitHub release tag the archives will be attached to (default: the version)
 #
 # NOTARY_PROFILE is a keychain profile created with:
 #   xcrun notarytool store-credentials my-profile --apple-id ... --team-id ... --password ...
@@ -27,13 +30,23 @@ xcodebuild -project TrackEdge.xcodeproj -scheme TrackEdge -configuration Release
 APP="$ARCHIVE/Products/Applications/TrackEdge.app"
 [[ -d "$APP" ]] || { echo "Archive failed"; exit 1; }
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$APP/Contents/Info.plist")
+BUILD=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "$APP/Contents/Info.plist")
 
-# 2. Sign: hardened runtime + secure timestamp are both required for notarization.
+# 2. Sign inside-out: hardened runtime + secure timestamp are both required for notarization.
+#    Sparkle's embedded helpers (XPC services, Autoupdate, Updater.app) must carry the same identity.
 if [[ "$IDENTITY" != "-" ]]; then
-  codesign --force --options runtime --timestamp --entitlements TrackEdge/Resources/TrackEdge.entitlements \
-    --sign "$IDENTITY" "$APP"
+  SPARKLE="$APP/Contents/Frameworks/Sparkle.framework"
+  SIGN=(codesign --force --options runtime --timestamp --sign "$IDENTITY")
+  if [[ -d "$SPARKLE" ]]; then
+    "${SIGN[@]}" "$SPARKLE/Versions/B/XPCServices/Installer.xpc"
+    "${SIGN[@]}" --preserve-metadata=entitlements "$SPARKLE/Versions/B/XPCServices/Downloader.xpc"
+    "${SIGN[@]}" "$SPARKLE/Versions/B/Autoupdate"
+    "${SIGN[@]}" "$SPARKLE/Versions/B/Updater.app"
+    "${SIGN[@]}" "$SPARKLE"
+  fi
+  "${SIGN[@]}" --entitlements TrackEdge/Resources/TrackEdge.entitlements "$APP"
 fi
-codesign --verify --strict --verbose=2 "$APP"
+codesign --verify --deep --strict --verbose=2 "$APP"
 if [[ "$IDENTITY" != "-" ]]; then
   codesign -dv "$APP" 2>&1 | grep -E "TeamIdentifier" || { echo "Not signed with a Developer ID"; exit 1; }
 fi
@@ -61,6 +74,18 @@ if (( NOTARIZE )); then
   spctl -a -vv -t open --context context:primary-signature "$DMG"
 fi
 hdiutil verify -quiet "$DMG"
+
+# 5. Sparkle feed: sign the zip with the EdDSA key from the login keychain and record it in appcast.xml.
+if (( NOTARIZE )); then
+  SPARKLE_BIN="build/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin"
+  SIG_LINE=$("$SPARKLE_BIN/sign_update" "$ZIP")
+  ED_SIG=$(echo "$SIG_LINE" | sed -E 's/.*sparkle:edSignature="([^"]+)".*/\1/')
+  LENGTH=$(echo "$SIG_LINE" | sed -E 's/.*length="([0-9]+)".*/\1/')
+  TAG="${RELEASE_TAG:-$VERSION}"
+  URL="https://github.com/a-riceeater/trackswipe/releases/download/$TAG/$(basename "$ZIP")"
+  scripts/update_appcast.py "$ZIP" "$VERSION" "$BUILD" "$URL" "$ED_SIG" "$LENGTH" ${NOTES_FILE:+"$NOTES_FILE"}
+  echo "Next: attach $(basename "$ZIP") and $(basename "$DMG") to GitHub release '$TAG', THEN commit and push appcast.xml."
+fi
 
 echo "Packaged:"
 for f in "$ZIP" "$DMG"; do

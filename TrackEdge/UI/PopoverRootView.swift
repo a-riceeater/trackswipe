@@ -6,6 +6,7 @@ struct PanelActions {
     var showDashboard: () -> Void = {}
     var openDiagnostics: () -> Void = {}
     var about: () -> Void = {}
+    var checkForUpdates: () -> Void = {}
     var resetSettings: () -> Void = {}
     var quit: () -> Void = {}
 }
@@ -22,6 +23,7 @@ struct PopoverRootView: View {
     @ObservedObject var navigation: PanelNavigation
     let actions: PanelActions
     let minimumHeight: CGFloat
+    let updates: UpdateController
 
     private var scheme: ColorScheme { settings.appearance == .dark ? .dark : .light }
 
@@ -53,6 +55,7 @@ struct PopoverRootView: View {
                 .strokeBorder(theme.panelBorder, lineWidth: 0.5)
         )
         .environment(\.theme, theme)
+        .environmentObject(updates)
         .environment(\.colorScheme, scheme)
         .tint(theme.accent)
     }
