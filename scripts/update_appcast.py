@@ -11,7 +11,8 @@ from email.utils import formatdate
 
 _, archive, short, build, url, signature, length, *rest = sys.argv
 notes_path = rest[0] if rest else None
-APPCAST = os.path.join(os.path.dirname(__file__), "..", "appcast.xml")
+# APPCAST_PATH lets tests write a throwaway feed instead of the real one.
+APPCAST = os.environ.get("APPCAST_PATH") or os.path.join(os.path.dirname(__file__), "..", "appcast.xml")
 MIN_OS = "13.0"
 
 HEADER = """<?xml version="1.0" encoding="utf-8"?>
@@ -44,7 +45,7 @@ def notes_html(path):
         if in_list:
             out.append("</ul>"); in_list = False
         if s.startswith("#"):
-            level = min(len(s) - len(s.lstrip("#")) + 1, 4)
+            level = min(max(len(s) - len(s.lstrip("#")), 2), 4)
             out.append(f"<h{level}>{inline(s.lstrip('#').strip())}</h{level}>")
         elif s:
             out.append(f"<p>{inline(s)}</p>")

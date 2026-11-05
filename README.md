@@ -45,6 +45,7 @@ It's written in Swift and SwiftUI, with AppKit for the status item and panel. It
 | **Typing palm rejection** | A touch that starts within 0.75 s of a keystroke is ignored until it lifts, and a keystroke during a touch cancels it. A slide cut short by typing within 1.5 s of starting is undone, so a palm settling in to type can't leave the volume or brightness changed. Always on; needs no permission. | On |
 | **Appearance** | App-specific Light/Dark. It doesn't follow the system setting. | Light |
 | **Open at Login** | Backed by `SMAppService.mainApp`. The switch shows the real OS registration state. | Off |
+| **Automatic updates** | Sparkle checks for new versions daily; ⋯ › Check for Updates… checks now. Updates are signature-verified before install. | On |
 
 The dashboard shows **live** brightness and output-volume percentages read from the OS, and, only when something needs attention, a status indicator (Limited, No Trackpad, Paused or Unavailable). Click it to open **Diagnostics**.
 
@@ -213,22 +214,52 @@ build/DerivedData/Build/Products/Debug/TrackEdge.app/Contents/MacOS/TrackEdge -s
 
 ## Release
 
-The version comes from `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `project.yml`. The UI reads it from the bundle.
+### Versioning
+
+Both numbers live in `project.yml`, and the UI reads them from the bundle.
+
+- **`MARKETING_VERSION`** is the version people see, for example `1.1.0`.
+- **`CURRENT_PROJECT_VERSION`** is the build number. It **must go up with every release**, because Sparkle compares build numbers to decide whether an update is newer.
+
+### Packaging
 
 ```sh
-scripts/package.sh                                            # ad-hoc, local testing
+scripts/package.sh                                            # ad-hoc, local testing only
 SIGN_IDENTITY="Developer ID Application: Name (TEAMID)" \
-NOTARY_PROFILE=my-notary-profile scripts/package.sh           # signed, notarized, stapled
+NOTARY_PROFILE=my-notary-profile \
+NOTES_FILE=notes.md scripts/package.sh                        # signed, notarized, stapled, added to appcast.xml
 ```
+
+`NOTES_FILE` is optional release notes in simple Markdown (headings, bullet lists, **bold**, `code`). They appear in the update window.
 
 This produces two equivalent artifacts in `dist/`:
 
 - **`TrackEdge-<version>.dmg`**, the recommended download. It holds the app next to an Applications shortcut for drag-to-install. Both the DMG and the app inside are signed, notarized and stapled.
-- **`TrackEdge-<version>.zip`**, the same notarized app, for people who prefer a zip.
+- **`TrackEdge-<version>.zip`**, the same notarized app. Sparkle downloads this one.
 
-Both builds are universal (arm64 + x86_64).
+Both builds are universal (arm64 + x86_64). The hardened runtime is on, the entitlements file explicitly disables the sandbox, and Sparkle's embedded helpers are re-signed with the same Developer ID. Install the app in `/Applications` so login-item registration is stable.
 
-The hardened runtime is on, and the entitlements file explicitly disables the sandbox. Install the app in `/Applications` so login-item registration is stable.
+### Publishing
+
+```sh
+scripts/publish_release.sh notes.md
+```
+
+This creates the GitHub release (tag = version) with the DMG and zip attached. It waits until the zip is downloadable, then commits and pushes `appcast.xml`. That order matters: if the appcast were pushed first, installed copies would be offered a download that doesn't exist yet.
+
+### Auto-updates (Sparkle)
+
+TrackEdge updates itself with [Sparkle 2](https://sparkle-project.org).
+
+- **Feed:** the app checks [`appcast.xml`](appcast.xml) on `main` once a day. Users can also choose ⋯ › Check for Updates…, or turn daily checks off in the same menu.
+- **Download:** each appcast entry points at the release's zip on GitHub.
+- **Signing:** every update is signed with an EdDSA key, and the app only installs updates whose signature matches its built-in public key (`SUPublicEDKey`). Sparkle also requires the same Developer ID signature as the installed app.
+- **Private key:** it lives only in the release machine's login keychain. **Back it up**, because without it no future update can be delivered to installed copies:
+  ```sh
+  build/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys -x ~/trackedge-sparkle-private-key
+  ```
+  Store that file somewhere safe outside the repo. To restore it on another Mac, use `generate_keys -f <file>`.
+- **Verified locally:** an installed 1.1.0 found, downloaded, verified and installed a locally served 1.1.1 and relaunched as 1.1.1. A tampered archive was rejected.
 
 ## Renaming
 
