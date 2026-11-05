@@ -15,9 +15,9 @@
 TrackEdge is a native macOS menu-bar utility that turns the edges of your trackpad into controls. Slide a finger up or down the **left edge** to change display brightness, or the **right edge** to change volume. Double-tap the **top-right corner** to mute, and swipe along the **bottom edge** to skip tracks. It works in any app, shows macOS's own volume/brightness HUD, and gives a haptic tick for each step.
 
 <p>
-  <img src="docs/images/dashboard-light.png" width="300" alt="TrackEdge dashboard (light)">
-  <img src="docs/images/settings-light.png" width="300" alt="TrackEdge settings (light)">
-  <img src="docs/images/dashboard-dark.png" width="300" alt="TrackEdge dashboard (dark)">
+  <img src="docs/images/trackedge-dashboard-light.png" width="300" alt="TrackEdge dashboard (light)">
+  <img src="docs/images/trackedge-settings-light.png" width="300" alt="TrackEdge settings (light)">
+  <img src="docs/images/trackedge-dashboard-dark.png" width="300" alt="TrackEdge dashboard (dark)">
 </p>
 
 It's written in Swift and SwiftUI, with AppKit for the status item and panel. It has no third-party dependencies and targets **macOS 13 Ventura or later**.
