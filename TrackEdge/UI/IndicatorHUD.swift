@@ -187,9 +187,36 @@ struct IndicatorHUDView: View {
         }
         .padding(.horizontal, 12)
         .frame(width: Self.width, height: Self.height)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5))
+        .indicatorGlass(cornerRadius: 16)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(content.level.map { "\(title) \(StepMath.percent($0)) percent" } ?? "\(title), \(content.subtitle)")
     }
+}
+
+private extension View {
+    /// Liquid Glass on macOS 26+. Earlier systems get an always-active HUD blur: the indicator's panel
+    /// never becomes key, and SwiftUI materials render flat and opaque in inactive windows.
+    @ViewBuilder
+    func indicatorGlass(cornerRadius: CGFloat) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        if #available(macOS 26.0, *) {
+            glassEffect(.regular, in: shape)
+        } else {
+            background(ActiveBlur().clipShape(shape))
+                .overlay(shape.strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5))
+        }
+    }
+}
+
+/// NSVisualEffectView pinned to the active state so it stays translucent in a non-key panel.
+private struct ActiveBlur: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = .hudWindow
+        view.blendingMode = .behindWindow
+        view.state = .active
+        return view
+    }
+
+    func updateNSView(_ view: NSVisualEffectView, context: Context) {}
 }
