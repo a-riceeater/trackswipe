@@ -71,7 +71,7 @@ extension SettingRow where Trailing == EmptyView {
 
 // MARK: - Switch
 
-/// Compact purple switch matching the reference. Uses a real `Toggle`, so accessibility and the
+/// Compact accent-coloured switch. Uses a real `Toggle`, so accessibility and the
 /// keyboard (Space when focused) behave like a native switch.
 struct EdgeSwitchStyle: ToggleStyle {
     @Environment(\.theme) private var theme
@@ -113,7 +113,7 @@ struct EdgeSwitch: View {
 
 // MARK: - Tick slider
 
-/// Discrete slider with a capsule track, purple fill, white thumb and tick dots, as in the reference.
+/// Discrete slider with a capsule track, accent fill, white thumb and tick dots, as in the reference.
 struct TickSlider: View {
     @Binding var value: Double
     let range: ClosedRange<Double>
@@ -255,7 +255,7 @@ struct SegmentedChoice<Option: Hashable & Identifiable>: View {
 
 // MARK: - Pop-up menu button
 
-/// Compact pop-up button (white bezel + purple chevron box) that opens a genuine `NSMenu`
+/// Compact pop-up button (white bezel + accent chevron box) that opens a genuine `NSMenu`
 /// positioned over the control, like `NSPopUpButton`.
 struct PopupMenuButton<Option: Hashable & Identifiable>: View {
     let options: [Option]

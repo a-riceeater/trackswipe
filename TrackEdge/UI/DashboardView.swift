@@ -191,7 +191,7 @@ struct DashboardView: View {
                     EdgeSwitch(label: "Media Strip", isOn: $settings.mediaStripEnabled)
                 }
                 if settings.mediaStripExpanded {
-                    SettingRow(symbol: nil, title: "Tap to Play or Pause", subtitle: "Clicks near the edge can set it off", titleAccessory: nil) {
+                    SettingRow(symbol: "playpause.fill", title: "Tap to Play or Pause", subtitle: "Clicks near the edge can set it off", titleAccessory: nil) {
                         EdgeSwitch(label: "Tap to Play or Pause", isOn: $settings.mediaTapEnabled)
                     }
                     .disabled(!settings.mediaStripEnabled)

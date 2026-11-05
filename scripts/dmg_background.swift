@@ -24,8 +24,8 @@ func render(scale: CGFloat) -> Data {
     ctx.cgContext.translateBy(x: 0, y: size.height)
     ctx.cgContext.scaleBy(x: 1, y: -1)
 
-    // Soft lavender wash.
-    NSGradient(colors: [color(0xFBFAFF), color(0xEEEAFC)])!.draw(in: NSRect(origin: .zero, size: size), angle: -90)
+    // Soft blush wash.
+    NSGradient(colors: [color(0xFFFAFA), color(0xFAEDEE)])!.draw(in: NSRect(origin: .zero, size: size), angle: -90)
 
     func text(_ string: String, size: CGFloat, weight: NSFont.Weight, color c: NSColor, y: CGFloat) {
         let style = NSMutableParagraphStyle()
@@ -49,7 +49,7 @@ func render(scale: CGFloat) -> Data {
     arrow.line(to: NSPoint(x: 384, y: 200))
     arrow.lineWidth = 4
     arrow.lineCapStyle = .round
-    color(0x6A44EF).setStroke()
+    color(0xCC6267).setStroke()
     let dashes: [CGFloat] = [0.1, 11]
     arrow.setLineDash(dashes, count: 2, phase: 0)
     arrow.stroke()

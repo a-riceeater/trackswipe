@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// TrackEdge's own mark: a violet tile containing a trackpad outline with a highlighted right edge.
+/// TrackEdge's own mark: a coral tile containing a trackpad outline with a highlighted right edge.
 struct AppGlyph: View {
     var size: CGFloat = 18
 
@@ -9,7 +9,7 @@ struct AppGlyph: View {
         let corner = size * 0.26
         ZStack {
             RoundedRectangle(cornerRadius: corner, style: .continuous)
-                .fill(LinearGradient(colors: [Color(hex: 0x8A6BFF), Color(hex: 0x5733E3)],
+                .fill(LinearGradient(colors: [Color(hex: 0xDE7E83), Color(hex: 0xB24E54)],
                                      startPoint: .topLeading, endPoint: .bottomTrailing))
             RoundedRectangle(cornerRadius: size * 0.1, style: .continuous)
                 .strokeBorder(Color.white.opacity(0.9), lineWidth: max(1, size * 0.065))

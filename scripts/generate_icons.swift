@@ -23,11 +23,11 @@ func render(_ px: Int) -> Data {
     NSGraphicsContext.current?.saveGraphicsState()
     shadow.set()
     let tile = NSBezierPath(roundedRect: body, xRadius: radius, yRadius: radius)
-    NSColor(srgbRed: 0.42, green: 0.27, blue: 0.94, alpha: 1).setFill()
+    NSColor(srgbRed: 0.80, green: 0.384, blue: 0.404, alpha: 1).setFill() // #CC6267
     tile.fill()
     NSGraphicsContext.current?.restoreGraphicsState()
-    let gradient = NSGradient(colors: [NSColor(srgbRed: 0.56, green: 0.43, blue: 1.0, alpha: 1),
-                                       NSColor(srgbRed: 0.33, green: 0.19, blue: 0.86, alpha: 1)])!
+    let gradient = NSGradient(colors: [NSColor(srgbRed: 0.871, green: 0.494, blue: 0.514, alpha: 1),
+                                       NSColor(srgbRed: 0.698, green: 0.306, blue: 0.329, alpha: 1)])!
     gradient.draw(in: tile, angle: -60)
 
     // Trackpad outline.

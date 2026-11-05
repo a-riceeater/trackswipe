@@ -1,12 +1,12 @@
 # TrackEdge
 
 <p align="center">
-  <a href="https://github.com/a-riceeater/trackswipe/releases/latest"><img src="https://img.shields.io/badge/Download_for_macOS-6A44EF?style=for-the-badge&logo=apple&logoColor=white" alt="Download for macOS" height="40"></a>
+  <a href="https://github.com/a-riceeater/trackswipe/releases/latest"><img src="https://img.shields.io/badge/Download_for_macOS-CC6267?style=for-the-badge&logo=apple&logoColor=white" alt="Download for macOS" height="40"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/a-riceeater/trackswipe/releases/latest"><img src="https://img.shields.io/github/v/release/a-riceeater/trackswipe?label=release&color=6A44EF" alt="Latest release"></a>
-  <a href="https://github.com/a-riceeater/trackswipe/releases"><img src="https://img.shields.io/github/downloads/a-riceeater/trackswipe/total?color=6A44EF" alt="Downloads"></a>
+  <a href="https://github.com/a-riceeater/trackswipe/releases/latest"><img src="https://img.shields.io/github/v/release/a-riceeater/trackswipe?label=release&color=CC6267" alt="Latest release"></a>
+  <a href="https://github.com/a-riceeater/trackswipe/releases"><img src="https://img.shields.io/github/downloads/a-riceeater/trackswipe/total?color=CC6267" alt="Downloads"></a>
   <img src="https://img.shields.io/badge/macOS-13%2B-000000?logo=apple&logoColor=white" alt="macOS 13+">
   <img src="https://img.shields.io/badge/Apple_Silicon_%2B_Intel-universal-555555" alt="Universal binary">
   <a href="LICENSE"><img src="https://img.shields.io/github/license/a-riceeater/trackswipe?color=555555" alt="License"></a>

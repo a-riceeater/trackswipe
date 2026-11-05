@@ -107,7 +107,7 @@ struct MediaHUDView: View {
     var body: some View {
         HStack(spacing: 12) {
             ZStack {
-                Circle().fill(Color(hex: 0x6A44EF))
+                Circle().fill(Color(hex: 0xCC6267))
                 Image(systemName: symbol)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(.white)
