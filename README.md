@@ -34,7 +34,7 @@ It's written in Swift and SwiftUI, with AppKit for the status item and panel. It
 | **Appearance** | App-specific Light/Dark. It doesn't follow the system setting. | Light |
 | **Open at Login** | Backed by `SMAppService.mainApp`. The switch shows the real OS registration state. | Off |
 
-The dashboard shows **live** brightness and output-volume percentages read from the OS, plus a status indicator: Ready, Limited, No Trackpad, Paused or Unavailable. Click the status to open **Diagnostics**.
+The dashboard shows **live** brightness and output-volume percentages read from the OS, and, only when something needs attention, a status indicator (Limited, No Trackpad, Paused or Unavailable). Click it to open **Diagnostics**.
 
 ---
 

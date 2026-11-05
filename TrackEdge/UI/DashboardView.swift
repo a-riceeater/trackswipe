@@ -156,7 +156,10 @@ struct DashboardView: View {
     var body: some View {
         VStack(spacing: 0) {
             PanelHeader(title: AppInfo.name) {
-                StatusBadge(health: model.health, action: actions.openDiagnostics)
+                // Only surface status when something needs attention; "Ready" is implied.
+                if model.health != .ready {
+                    StatusBadge(health: model.health, action: actions.openDiagnostics)
+                }
             }
             .padding(.top, 15)
 
