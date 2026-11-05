@@ -12,6 +12,8 @@ protocol LevelControlling: AnyObject {
     func beginAdjust()
     /// Applies `steps` grid steps. Returns nil when the level cannot be controlled at all.
     func adjust(steps: Int, fine: Bool) -> AdjustResult?
+    /// Restores the value captured by `beginAdjust`. Returns the restored value, or nil if nothing changed.
+    func revert() -> Double?
     func endAdjust()
 }
 
@@ -34,6 +36,7 @@ final class VolumeService: LevelControlling, MuteControlling {
     private let keys: SystemKeyEmitter
     private let osd: SystemOSDController
     private var tracked: AudioController.Snapshot?
+    private var original: AudioController.Snapshot?
 
     init(audio: AudioController, keys: SystemKeyEmitter, osd: SystemOSDController) {
         self.audio = audio
@@ -45,6 +48,17 @@ final class VolumeService: LevelControlling, MuteControlling {
 
     func beginAdjust() {
         tracked = audio.snapshot()
+        original = tracked
+    }
+
+    func revert() -> Double? {
+        guard let original, let value = original.volume, let current = tracked,
+              current.volume != value || current.muted != original.muted else { return nil }
+        // Written directly so no extra HUD flashes up for an undo.
+        audio.setVolume(value)
+        if current.muted != original.muted { audio.setMuted(original.muted) }
+        tracked = original
+        return value
     }
 
     func adjust(steps: Int, fine: Bool) -> AdjustResult? {
@@ -79,6 +93,7 @@ final class VolumeService: LevelControlling, MuteControlling {
 
     func endAdjust() {
         tracked = nil
+        original = nil
     }
 
     @discardableResult
@@ -100,6 +115,7 @@ final class BrightnessService: LevelControlling {
     private let keys: SystemKeyEmitter
     private let osd: SystemOSDController
     private var tracked: (id: CGDirectDisplayID, value: Double)?
+    private var original: (id: CGDirectDisplayID, value: Double)?
 
     init(display: DisplayBrightnessController, keys: SystemKeyEmitter, osd: SystemOSDController) {
         self.display = display
@@ -115,6 +131,14 @@ final class BrightnessService: LevelControlling {
         } else {
             tracked = nil
         }
+        original = tracked
+    }
+
+    func revert() -> Double? {
+        guard let original, let current = tracked, abs(current.value - original.value) > 1e-6 else { return nil }
+        display.set(original.value, on: original.id)
+        tracked = original
+        return original.value
     }
 
     func adjust(steps: Int, fine: Bool) -> AdjustResult? {
@@ -138,5 +162,6 @@ final class BrightnessService: LevelControlling {
 
     func endAdjust() {
         tracked = nil
+        original = nil
     }
 }

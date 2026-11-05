@@ -14,7 +14,10 @@ import Foundation
 ///    passes the minimum distance quickly enough. Exactly one command per stroke.
 /// 4. Short, still taps in the top-right corner (twice, within the window) toggle mute.
 /// 5. A short, still tap in the bottom strip (when enabled) queues play/pause, confirmed only if no new
-///    touch lands within `mediaTapConfirmDelay`.
+///    touch lands (and no key is pressed) within `mediaTapConfirmDelay`.
+///
+/// Typing palm rejection: a touch that starts within `typingGuard` of a key press is ignored until it
+/// lifts, and a key press at any point during a touch cancels that touch (ending an active slide).
 struct GestureRecognizer {
     struct Zones: OptionSet, Equatable, Sendable {
         let rawValue: Int
@@ -40,6 +43,7 @@ struct GestureRecognizer {
 
     struct Slide: Equatable, Sendable {
         var contactID: Int
+        var startTime: TimeInterval
         var target: SlideTarget
         var smoothedY: Double
         var anchorY: Double
@@ -103,11 +107,14 @@ struct GestureRecognizer {
         return []
     }
 
-    /// Fires a confirmed strip tap once its deadline passes without a new touch.
-    mutating func tick(now: TimeInterval) -> [GestureCommand] {
+    /// Fires a confirmed strip tap once its deadline passes without a new touch or key press.
+    mutating func tick(now: TimeInterval, secondsSinceKeyDown: TimeInterval = .infinity) -> [GestureCommand] {
         guard let deadline = pendingMediaTapDeadline, now >= deadline else { return [] }
         pendingMediaTapDeadline = nil
         guard config.mediaStripEnabled, config.mediaTapEnabled else { return [] }
+        let liftTime = deadline - config.mediaTapConfirmDelay
+        // A key pressed after the tap means the "tap" was a palm settling in to type.
+        guard secondsSinceKeyDown > now - liftTime else { return [] }
         return [.media(.playPause)]
     }
 
@@ -115,7 +122,7 @@ struct GestureRecognizer {
         let touching = frame.contacts.filter(\.isTouching)
         switch phase {
         case .idle:
-            var out = tick(now: frame.timestamp)
+            var out = tick(now: frame.timestamp, secondsSinceKeyDown: frame.secondsSinceKeyDown)
             guard !touching.isEmpty else { return out }
             // Any new touch before the confirm delay means the strip tap was part of something else.
             pendingMediaTapDeadline = nil
@@ -152,6 +159,12 @@ struct GestureRecognizer {
                 phase = .consumed
                 return [.slideEnded(slide.target)]
             }
+            let touchAge = frame.timestamp - slide.startTime
+            if frame.secondsSinceKeyDown <= touchAge {
+                // Typing started while sliding: this is a palm settling, not a deliberate slide.
+                phase = .consumed
+                return [touchAge <= config.typingRevertWindow ? .slideCancelled(slide.target) : .slideEnded(slide.target)]
+            }
             let out = step(&slide, y: touching[0].y, modifiers: frame.modifiers)
             phase = .sliding(slide)
             return out
@@ -165,6 +178,12 @@ struct GestureRecognizer {
     // MARK: - Phases
 
     private mutating func begin(_ contact: TouchContact, frame: TouchFrame) -> [GestureCommand] {
+        if frame.secondsSinceKeyDown < config.typingGuard {
+            // Landed while typing: almost certainly a resting palm.
+            lastCornerTapLift = nil
+            phase = .consumed
+            return []
+        }
         let zones = zones(x: contact.x, y: contact.y)
         guard !zones.isEmpty else {
             // An unrelated touch breaks a pending double tap.
@@ -194,6 +213,12 @@ struct GestureRecognizer {
     }
 
     private mutating func advance(_ c: inout Candidate, contact: TouchContact, frame: TouchFrame) -> [GestureCommand] {
+        if frame.secondsSinceKeyDown <= frame.timestamp - c.startTime {
+            // A key was pressed after this touch began.
+            lastCornerTapLift = nil
+            phase = .consumed
+            return []
+        }
         c.lastX = contact.x
         c.lastY = contact.y
         if frame.buttonDown { c.buttonPressed = true }
@@ -219,6 +244,7 @@ struct GestureRecognizer {
                 let fine = isFine(frame.modifiers)
                 var slide = Slide(
                     contactID: c.contactID,
+                    startTime: c.startTime,
                     target: config.target(forLeftEdge: left),
                     smoothedY: contact.y,
                     anchorY: c.startY,

@@ -71,8 +71,14 @@ final class StepMathTests: XCTestCase {
 private final class MockLevel: LevelControlling, MuteControlling {
     var value: Double
     var began = 0, ended = 0, muteToggles = 0
+    private var original: Double?
     init(_ value: Double) { self.value = value }
-    func beginAdjust() { began += 1 }
+    func beginAdjust() { began += 1; original = value }
+    func revert() -> Double? {
+        guard let original, original != value else { return nil }
+        value = original
+        return original
+    }
     func adjust(steps: Int, fine: Bool) -> AdjustResult? {
         let next = StepMath.apply(steps: steps, to: value, fine: fine)
         defer { value = next }
@@ -174,6 +180,15 @@ final class ActionDispatcherTests: XCTestCase {
         XCTAssertEqual(HapticEngine.actuationID(for: .light, fine: false), 3)
         XCTAssertNil(HapticEngine.actuationID(for: .off, fine: false))
         XCTAssertNil(HapticEngine.actuationID(for: .off, fine: true))
+    }
+
+    func testTypingCancelRestoresOriginalLevel() {
+        dispatcher.executeNow([.slideBegan(.brightness), .adjust(.brightness, steps: 2, fine: false)], deviceID: 1)
+        XCTAssertEqual(brightness.value, 0.625, accuracy: 1e-9)
+        dispatcher.executeNow([.slideCancelled(.brightness)], deviceID: 1)
+        XCTAssertEqual(brightness.value, 0.5, accuracy: 1e-9)
+        XCTAssertFalse(cursor.isFrozen)
+        XCTAssertFalse(dispatcher.isSlideActive)
     }
 
     func testHapticsOffMeansNone() {

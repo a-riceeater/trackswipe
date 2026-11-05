@@ -7,6 +7,7 @@ struct InspectorSnapshot: Equatable, Sendable {
     var state = "idle"
     var modifiers = ModifierState.none
     var buttonDown = false
+    var secondsSinceKeyDown: TimeInterval = .infinity
     var config = GestureConfig()
 }
 
@@ -35,13 +36,15 @@ final class GestureEngine {
         // Sample input state as close to the frame as possible.
         let modifiers = ModifierMonitor.current()
         let buttonDown = ModifierMonitor.primaryButtonDown()
+        let sinceKey = ModifierMonitor.secondsSinceKeyDown()
         queue.async { [self] in
             guard enabled else { return }
             let contacts = raw.map { contact -> TouchContact in
                 let point = TouchNormalizer.normalize(rawX: contact.x, rawY: contact.y, invertY: invertY)
-                return TouchContact(id: contact.id, x: point.x, y: point.y, isTouching: contact.isTouching)
+                return TouchContact(id: contact.id, x: point.x, y: point.y, isTouching: contact.isTouching, size: contact.majorAxis)
             }
-            let frame = TouchFrame(timestamp: timestamp, contacts: contacts, modifiers: modifiers, buttonDown: buttonDown)
+            let frame = TouchFrame(timestamp: timestamp, contacts: contacts, modifiers: modifiers, buttonDown: buttonDown,
+                                   secondsSinceKeyDown: sinceKey)
             var recognizer = recognizers[device.id] ?? GestureRecognizer(config: config(for: device))
             let commands = recognizer.process(frame)
             recognizers[device.id] = recognizer
@@ -115,7 +118,7 @@ final class GestureEngine {
         guard let deadline = recognizer.pendingMediaTapDeadline else { return }
         let work = DispatchWorkItem { [self] in
             guard var r = recognizers[id] else { return }
-            let commands = r.tick(now: deadline)
+            let commands = r.tick(now: deadline, secondsSinceKeyDown: ModifierMonitor.secondsSinceKeyDown())
             recognizers[id] = r
             dispatcher.execute(commands, deviceID: id)
         }
@@ -134,6 +137,7 @@ final class GestureEngine {
             state: recognizer.stateName,
             modifiers: frame.modifiers,
             buttonDown: frame.buttonDown,
+            secondsSinceKeyDown: frame.secondsSinceKeyDown,
             config: recognizer.config
         )
         DispatchQueue.main.async { handler(snapshot) }

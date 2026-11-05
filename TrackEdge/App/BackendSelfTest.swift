@@ -16,6 +16,7 @@ enum BackendSelfTest {
         for d in model.trackpads {
             line("trackpad: \(d.name) \(d.widthMM)×\(d.heightMM)mm family \(d.familyID) forceTouch=\(d.forceTouch) haptics=\(model.haptics.support(for: d.id).description)")
         }
+        line("seconds since last key down (hidSystemState): \(ModifierMonitor.secondsSinceKeyDown())")
         line("accessibility trusted: \(PermissionsController.accessibilityTrusted) → level route: \(model.volumeService.route.rawValue)")
         line("media route: \(model.media.route.rawValue); direct-route feedback: \(model.osd.route.rawValue)")
 

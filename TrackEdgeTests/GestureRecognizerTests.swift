@@ -428,6 +428,73 @@ final class GestureRecognizerTests: XCTestCase {
         XCTAssertTrue(r.tick(now: t + 1).isEmpty)
     }
 
+    // MARK: Typing palm rejection
+
+    private func frame(_ contacts: [TouchContact], sinceKey: TimeInterval, dt: TimeInterval = 0.01) -> TouchFrame {
+        t += dt
+        return TouchFrame(timestamp: t, contacts: contacts, secondsSinceKeyDown: sinceKey)
+    }
+
+    func testTouchStartingWhileTypingIsIgnoredUntilLift() {
+        var r = GestureRecognizer(config: config)
+        var out: [GestureCommand] = []
+        // Palm lands 0.2 s after a keystroke, then keeps sliding long after typing stops.
+        for i in 0...60 {
+            out += r.process(frame([touch(0.98, 0.7 - 0.4 * Double(i) / 60)], sinceKey: 0.2 + 0.01 * Double(i)))
+        }
+        out += r.process(frame([], sinceKey: 2))
+        XCTAssertTrue(out.isEmpty)
+        // After the guard, a fresh deliberate slide works.
+        XCTAssertEqual(drag(&r, from: (0.98, 0.7), to: (0.98, 0.3)).first, .slideBegan(.volume))
+    }
+
+    func testKeyPressDuringCandidateCancelsTouch() {
+        var r = GestureRecognizer(config: config)
+        var out = r.process(frame([touch(0.98, 0.7)], sinceKey: 5))
+        // A key is pressed 0.05 s after the touch began; the finger then moves.
+        out += r.process(frame([touch(0.98, 0.7)], sinceKey: 0.0, dt: 0.05))
+        for i in 1...30 { out += r.process(frame([touch(0.98, 0.7 - 0.4 * Double(i) / 30)], sinceKey: 0.01 * Double(i))) }
+        out += r.process(frame([], sinceKey: 1))
+        XCTAssertTrue(out.isEmpty)
+    }
+
+    func testTypingShortlyAfterSlideStartUndoesIt() {
+        var r = GestureRecognizer(config: config)
+        var out: [GestureCommand] = []
+        for i in 0...20 { out += r.process(frame([touch(0.02, 0.7 - 0.2 * Double(i) / 20)], sinceKey: 10 + 0.01 * Double(i))) }
+        XCTAssertEqual(out.first, .slideBegan(.brightness))
+        XCTAssertEqual(r.process(frame([touch(0.02, 0.5)], sinceKey: 0.0)), [.slideCancelled(.brightness)])
+        XCTAssertTrue(r.process(frame([touch(0.02, 0.3)], sinceKey: 0.01)).isEmpty)
+    }
+
+    func testTypingLongAfterSlideStartJustEndsIt() {
+        var r = GestureRecognizer(config: config)
+        _ = r.process(frame([touch(0.98, 0.7)], sinceKey: 30))
+        _ = r.process(frame([touch(0.98, 0.6)], sinceKey: 30))
+        for _ in 0..<200 { _ = r.process(frame([touch(0.98, 0.6)], sinceKey: 30)) }
+        XCTAssertEqual(r.process(frame([touch(0.98, 0.6)], sinceKey: 0.0)), [.slideEnded(.volume)])
+    }
+
+    func testCornerTapsWhileTypingNeverMute() {
+        var r = GestureRecognizer(config: config)
+        var out: [GestureCommand] = []
+        for _ in 0..<2 {
+            out += r.process(frame([touch(0.95, 0.05)], sinceKey: 0.3))
+            out += r.process(frame([touch(0.95, 0.05)], sinceKey: 0.38, dt: 0.08))
+            out += r.process(frame([], sinceKey: 0.39))
+        }
+        XCTAssertTrue(out.isEmpty)
+    }
+
+    func testStripTapFollowedByTypingDoesNotPlay() {
+        config.mediaTapEnabled = true
+        var r = GestureRecognizer(config: config)
+        _ = tap(&r, at: (0.5, 0.97))
+        let deadline = try! XCTUnwrap(r.pendingMediaTapDeadline)
+        // A key was pressed 0.1 s before the deadline, i.e. after the tap lifted.
+        XCTAssertTrue(r.tick(now: deadline, secondsSinceKeyDown: 0.1).isEmpty)
+    }
+
     // MARK: Normalisation
 
     func testNormalizerFlipsY() {

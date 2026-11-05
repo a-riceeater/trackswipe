@@ -30,6 +30,7 @@ It's written in Swift and SwiftUI, with AppKit for the status item and panel. It
 | **Fine Control** | Hold ⇧⌥ while sliding for quarter steps (1/64), the same as ⇧⌥ + volume key. | On |
 | **Sensitivity** | 0.5×–4.0× in 0.25× steps. At 1.0× one step takes 6 mm of finger travel, so 1.5× needs 4 mm. | 1.5× |
 | **Edge Width** | 3%–15% of the trackpad width. | 5% |
+| **Typing palm rejection** | A touch that starts within 0.75 s of a keystroke is ignored until it lifts, and a keystroke during a touch cancels it. A slide cut short by typing within 1.5 s of starting is undone, so a palm settling in to type can't leave the volume or brightness changed. Always on; needs no permission. | On |
 | **Appearance** | App-specific Light/Dark. It doesn't follow the system setting. | Light |
 | **Open at Login** | Backed by `SMAppService.mainApp`. The switch shows the real OS registration state. | Off |
 
@@ -49,7 +50,7 @@ xcodegen generate
 xcodebuild -project TrackEdge.xcodeproj -scheme TrackEdge -configuration Debug -derivedDataPath build/DerivedData build
 open build/DerivedData/Build/Products/Debug/TrackEdge.app
 
-# Unit tests (73 tests: recognizer, step math, dispatcher, settings)
+# Unit tests (80 tests: recognizer, step math, dispatcher, settings)
 xcodebuild -project TrackEdge.xcodeproj -scheme TrackEdge -derivedDataPath build/DerivedData test
 ```
 
@@ -101,6 +102,7 @@ MultitouchSupport (private, dlopen)          CGEventSource (modifiers, button)
   - **Dead zone and direction:** a slide needs 2 mm of vertical travel, a 1.5:1 vertical-to-horizontal ratio and less than 3.5 mm of lateral drift before it starts.
   - **Hysteresis:** the step anchor only moves by whole steps, so jitter at a step boundary can't oscillate.
   - **Click rejection:** a physical click or tap-to-click rejects slides and taps.
+- **Typing rejection:** `CGEventSource.secondsSinceLastEventType(.hidSystemState, .keyDown)` is sampled with every frame. Touches that begin while you type are ignored, and keystrokes cancel touches in progress or undo recent slides (`slideCancelled`).
   - **Conflict resolution:** in the bottom corners, the dominant direction after the dead zone decides between slide and swipe. A sloppy second Quick Mute tap gets a doubled dead zone, so mute wins over the right-edge slide.
   - **Coalescing:** finger travel is converted into whole-step `adjust` commands and smoothed with a light EMA.
 - **Steps match the keyboard exactly.** Normal steps are 1/16 and fine steps 1/64. Off-grid values snap the same way macOS's own keys do, measured on hardware: 0.4776 → 0.5 and 0.6839 → 0.75. See `StepMath`. Because every normal grid point is also a fine one, switching modes mid-slide can't jump or drift.
@@ -165,7 +167,7 @@ build/DerivedData/Build/Products/Debug/TrackEdge.app/Contents/MacOS/TrackEdge -s
 **Automated and verified on a MacBook Air (Apple Silicon, macOS 26.6.1, built-in Force Touch trackpad, family 110):**
 
 - Debug and Release builds succeed with no Swift warnings, and `scripts/package.sh` archives, signs and zips the app.
-- All 73 unit tests pass.
+- All 80 unit tests pass.
 - MultitouchSupport loads, the built-in trackpad starts (121.9 × 74.1 mm), and its Taptic actuator opens.
 - `-selfTest`, through both the key route and the direct route, gave the expected result for every step: volume ±1/16 and ±1/64, brightness ±1/16 and ±1/64. Original values were restored afterwards.
 - Synthesised volume keys show the native macOS 26 volume HUD. `OSDManager` resolves on macOS 26 but renders nothing, which is why macOS 26+ uses the fallback indicator.

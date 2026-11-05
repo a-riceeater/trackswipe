@@ -22,6 +22,7 @@ struct RawContact: Equatable, Sendable {
     let x: Double
     let y: Double
     let state: Int32
+    let majorAxis: Double
 
     var isTouching: Bool {
         state == Int32(TEMTTouchStateMakeTouch.rawValue) || state == Int32(TEMTTouchStateTouching.rawValue)
@@ -138,7 +139,8 @@ final class MultitouchProvider {
                     id: Int(t.pathIndex),
                     x: Double(t.normalizedVector.position.x),
                     y: Double(t.normalizedVector.position.y),
-                    state: t.state
+                    state: t.state,
+                    majorAxis: Double(t.majorAxis)
                 ))
             }
         }

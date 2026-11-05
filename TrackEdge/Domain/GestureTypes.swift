@@ -42,12 +42,15 @@ struct TouchContact: Equatable, Sendable {
     var x: Double
     var y: Double
     var isTouching: Bool
+    /// Contact major axis as reported by MultitouchSupport (diagnostics only; palms read much larger).
+    var size: Double
 
-    init(id: Int, x: Double, y: Double, isTouching: Bool = true) {
+    init(id: Int, x: Double, y: Double, isTouching: Bool = true, size: Double = 0) {
         self.id = id
         self.x = x
         self.y = y
         self.isTouching = isTouching
+        self.size = size
     }
 }
 
@@ -58,12 +61,16 @@ struct TouchFrame: Sendable {
     var modifiers: ModifierState
     /// True while the physical trackpad button (or tap-to-click) holds the primary button down.
     var buttonDown: Bool
+    /// Seconds since the last physical key press, sampled with the frame. Drives typing palm rejection.
+    var secondsSinceKeyDown: TimeInterval
 
-    init(timestamp: TimeInterval, contacts: [TouchContact], modifiers: ModifierState = .none, buttonDown: Bool = false) {
+    init(timestamp: TimeInterval, contacts: [TouchContact], modifiers: ModifierState = .none, buttonDown: Bool = false,
+         secondsSinceKeyDown: TimeInterval = .infinity) {
         self.timestamp = timestamp
         self.contacts = contacts
         self.modifiers = modifiers
         self.buttonDown = buttonDown
+        self.secondsSinceKeyDown = secondsSinceKeyDown
     }
 }
 
@@ -85,6 +92,8 @@ enum GestureCommand: Equatable, Sendable {
     /// Positive steps raise the value, negative lower it. `fine` selects 1/64 instead of 1/16 steps.
     case adjust(SlideTarget, steps: Int, fine: Bool)
     case slideEnded(SlideTarget)
+    /// Ends the slide AND restores the level from before it began (a palm triggered it while typing).
+    case slideCancelled(SlideTarget)
     case toggleMute
     case media(MediaCommand)
 }

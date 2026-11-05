@@ -296,10 +296,11 @@ struct TouchInspectorView: View {
             }
             .aspectRatio((snapshot?.config.surfaceWidthMM ?? 100) / (snapshot?.config.surfaceHeightMM ?? 70), contentMode: .fit)
             if let s = snapshot {
-                Text("\(s.deviceName) · state: \(s.state) · button: \(s.buttonDown ? "down" : "up")")
+                Text("\(s.deviceName) · state: \(s.state) · button: \(s.buttonDown ? "down" : "up")"
+                     + (s.secondsSinceKeyDown < s.config.typingGuard ? " · typing guard ON" : ""))
                     .font(.caption.monospaced())
                 ForEach(s.contacts, id: \.id) { c in
-                    Text(String(format: "#%d  x=%.3f  y=%.3f  %@", c.id, c.x, c.y, c.isTouching ? "touching" : "hover/lift"))
+                    Text(String(format: "#%d  x=%.3f  y=%.3f  size=%.1f  %@", c.id, c.x, c.y, c.size, c.isTouching ? "touching" : "hover/lift"))
                         .font(.caption.monospaced())
                 }
             } else {

@@ -11,6 +11,12 @@ enum ModifierMonitor {
         ModifierState(cgFlags: CGEventSource.flagsState(.combinedSessionState))
     }
 
+    /// Seconds since the last physical key press (any app). Used to ignore palms that touch the trackpad
+    /// while typing. Reads HID idle-time bookkeeping: no event tap, no Input Monitoring required.
+    static func secondsSinceKeyDown() -> TimeInterval {
+        CGEventSource.secondsSinceLastEventType(.hidSystemState, eventType: .keyDown)
+    }
+
     /// True while the primary button is held (physical click, or tap-to-click's synthetic press).
     static func primaryButtonDown() -> Bool {
         CGEventSource.buttonState(.combinedSessionState, button: .left)

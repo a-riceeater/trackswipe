@@ -18,6 +18,14 @@ struct GestureConfig: Equatable, Sendable {
     var surfaceWidthMM: Double = 100
     var surfaceHeightMM: Double = 70
 
+    // MARK: Typing palm rejection
+    /// Touches that begin within this long after a key press are ignored for their whole lifetime, and any
+    /// key press during a touch cancels it. Palms resting on the trackpad edges while typing are the main
+    /// source of accidental edge input.
+    var typingGuard: TimeInterval = 0.75
+    /// A slide interrupted by typing within this long of its start is undone, not just ended.
+    var typingRevertWindow: TimeInterval = 1.5
+
     // MARK: Slide tuning
     /// Vertical travel required before an edge touch becomes a slide.
     var slideDeadZoneMM = 2.0

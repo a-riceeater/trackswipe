@@ -118,6 +118,19 @@ final class ActionDispatcher {
                 }
             }
 
+        case let .slideCancelled(target):
+            pendingSteps = 0
+            cursor.release()
+            if activeSlide == target, let restored = controller(for: target).revert() {
+                onLevelChanged?(target, restored)
+            }
+            controller(for: target).endAdjust()
+            if activeSlide == target {
+                activeSlide = nil
+                activeDevice = nil
+                onSlideStateChanged?(nil)
+            }
+
         case let .slideEnded(target):
             if activeSlide == target { flush() }
             cursor.release()

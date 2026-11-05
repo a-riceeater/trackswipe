@@ -175,6 +175,7 @@ final class AppModel: ObservableObject {
         case let .slideBegan(t): return "slide began · \(t.rawValue)"
         case let .adjust(t, steps, fine): return "\(t.rawValue) \(steps > 0 ? "+" : "")\(steps)\(fine ? " (¼)" : "")"
         case let .slideEnded(t): return "slide ended · \(t.rawValue)"
+        case let .slideCancelled(t): return "slide undone (typing) · \(t.rawValue)"
         case .toggleMute: return "toggle mute"
         case let .media(m): return "media · \(m.rawValue)"
         }
