@@ -3,8 +3,10 @@ import XCTest
 
 @MainActor
 final class PlaybackObserverTests: XCTestCase {
-    private func post(_ name: String, state: String, on center: NotificationCenter) {
-        center.post(name: Notification.Name(name), object: nil, userInfo: ["Player State": state])
+    private func post(_ name: String, state: String, on center: NotificationCenter, extra: [String: String] = [:]) {
+        var info = extra
+        info["Player State"] = state
+        center.post(name: Notification.Name(name), object: nil, userInfo: info)
     }
 
     func testReportsPausedFromSpotify() {
@@ -31,6 +33,32 @@ final class PlaybackObserverTests: XCTestCase {
         }
         post("com.apple.Music.playerInfo", state: "Playing", on: center)
         wait(for: [done], timeout: 3)
+    }
+
+    func testCarriesTrackTitleAndArtist() {
+        let center = NotificationCenter()
+        let observer = PlaybackObserver(center: center)
+        let done = expectation(description: "event")
+        observer.waitForChange(after: Date(), timeout: 2) { event in
+            let e = try! XCTUnwrap(event)
+            XCTAssertEqual(e.title, "Song")
+            XCTAssertEqual(e.artist, "Artist")
+            let skip = MediaHUD.Content(skip: .next, event: e)
+            XCTAssertEqual(skip?.title, "Song")
+            XCTAssertEqual(skip?.subtitle, "Artist · Spotify")
+            XCTAssertEqual(skip?.symbol, "forward.fill")
+            XCTAssertNil(MediaHUD.Content(skip: .playPause, event: e))
+            XCTAssertEqual(MediaHUD.Content(e).subtitle, "Song · Spotify")
+            done.fulfill()
+        }
+        post("com.spotify.client.PlaybackStateChanged", state: "Playing", on: center,
+             extra: ["Name": "Song", "Artist": "Artist", "Album": "Album"])
+        wait(for: [done], timeout: 3)
+    }
+
+    func testSkipWithoutTrackInfoKeepsGenericLabel() {
+        let event = PlaybackObserver.Event(app: "Music", state: .playing, title: nil, artist: nil, date: Date())
+        XCTAssertNil(MediaHUD.Content(skip: .previous, event: event))
     }
 
     func testTimesOutWhenNoPlayerReports() {

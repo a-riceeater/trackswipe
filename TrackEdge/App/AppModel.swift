@@ -325,11 +325,17 @@ final class AppModel: ObservableObject {
         return ok
     }
 
-    /// Next/previous show immediately. Play/pause waits up to 0.5 s for Spotify/Music to report the
-    /// resulting state ("Playing"/"Paused"); other players get the neutral "Play / Pause".
+    /// Next/previous show immediately, then update in place with the new song if Spotify/Music reports
+    /// it. Play/pause waits up to 0.5 s for the resulting state ("Playing"/"Paused"); other players get
+    /// the neutral labels.
     private func showMediaFeedback(_ command: MediaCommand, sentAt: Date) {
         guard command == .playPause else {
             MediaHUD.shared.show(command)
+            playback.waitForChange(after: sentAt.addingTimeInterval(-0.05), timeout: 0.8) { event in
+                if let event, let content = MediaHUD.Content(skip: command, event: event) {
+                    MediaHUD.shared.show(content)
+                }
+            }
             return
         }
         playback.waitForChange(after: sentAt.addingTimeInterval(-0.05), timeout: 0.5) { event in

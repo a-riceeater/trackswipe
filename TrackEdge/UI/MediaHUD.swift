@@ -11,7 +11,7 @@ final class MediaHUD {
     private var panel: NSPanel?
     private var hosting: NSHostingView<MediaHUDView>?
     private var hideWork: DispatchWorkItem?
-    private let size = NSSize(width: 230, height: 54)
+    private let size = NSSize(width: MediaHUDView.width, height: MediaHUDView.height)
 
     struct Content: Equatable {
         let symbol: String
@@ -30,7 +30,15 @@ final class MediaHUD {
         init(_ event: PlaybackObserver.Event) {
             symbol = event.state == .playing ? "play.fill" : "pause.fill"
             title = event.state == .playing ? "Playing" : "Paused"
-            subtitle = event.app
+            subtitle = [event.title, event.app].compactMap { $0 }.joined(separator: " · ")
+        }
+
+        /// Skip result with the song that is now playing; nil when the player didn't say.
+        init?(skip command: MediaCommand, event: PlaybackObserver.Event) {
+            guard command != .playPause, let song = event.title else { return nil }
+            symbol = command == .next ? "forward.fill" : "backward.fill"
+            title = song
+            subtitle = [event.artist, event.app].compactMap { $0 }.joined(separator: " · ")
         }
     }
 
@@ -99,6 +107,9 @@ final class MediaHUD {
 }
 
 struct MediaHUDView: View {
+    static let width: CGFloat = 290
+    static let height: CGFloat = 54
+
     let content: MediaHUD.Content
 
     private var symbol: String { content.symbol }
@@ -116,14 +127,18 @@ struct MediaHUDView: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text(title)
                     .font(.system(size: 13, weight: .semibold))
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                 Text(content.subtitle)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 12)
-        .frame(width: 230, height: 54)
+        .frame(width: Self.width, height: Self.height)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5))
         .accessibilityElement(children: .combine)

@@ -1,6 +1,6 @@
 import Foundation
 
-/// Learns the real result of a play/pause toggle without any permission.
+/// Learns the real result of media commands (play/pause state, the track now playing) without any permission.
 ///
 /// macOS 15.4+ blocks third-party apps from reading Now Playing state through MediaRemote (verified on
 /// macOS 26: it returns no app and no info). Spotify and Apple Music, however, broadcast every playback
@@ -13,6 +13,9 @@ final class PlaybackObserver {
         enum State: Equatable { case playing, paused }
         let app: String
         let state: State
+        /// Track now playing, when the player includes it (Spotify and Music both send Name/Artist).
+        let title: String?
+        let artist: String?
         let date: Date
     }
 
@@ -32,8 +35,13 @@ final class PlaybackObserver {
         self.center = center
         for source in Self.sources {
             let token = center.addObserver(forName: source.name, object: nil, queue: .main) { [weak self] note in
-                let rawState = note.userInfo?["Player State"] as? String
-                MainActor.assumeIsolated { self?.record(app: source.app, rawState: rawState) }
+                let info = note.userInfo
+                let rawState = info?["Player State"] as? String
+                let title = (info?["Name"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                let artist = (info?["Artist"] as? String).flatMap { $0.isEmpty ? nil : $0 }
+                MainActor.assumeIsolated {
+                    self?.record(app: source.app, rawState: rawState, title: title, artist: artist)
+                }
             }
             tokens.append(token)
         }
@@ -58,14 +66,14 @@ final class PlaybackObserver {
         }
     }
 
-    private func record(app: String, rawState: String?) {
+    private func record(app: String, rawState: String?, title: String?, artist: String?) {
         let state: Event.State
         switch rawState {
         case "Playing": state = .playing
         case "Paused", "Stopped": state = .paused
         default: return
         }
-        let event = Event(app: app, state: state, date: Date())
+        let event = Event(app: app, state: state, title: title, artist: artist, date: Date())
         lastEvent = event
         let ready = waiters.filter { $0.after <= event.date }
         waiters.removeAll { $0.after <= event.date }

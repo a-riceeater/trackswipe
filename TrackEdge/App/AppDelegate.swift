@@ -46,8 +46,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         // `-debugMediaHUD next|previous|playPause` shows the media indicator at launch (no command is sent).
-        if let raw = UserDefaults.standard.string(forKey: "debugMediaHUD"), let command = MediaCommand(rawValue: raw) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { MediaHUD.shared.show(command) }
+        if let raw = UserDefaults.standard.string(forKey: "debugMediaHUD") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                if raw == "song" {
+                    let sample = PlaybackObserver.Event(app: "Spotify", state: .playing,
+                                                        title: "A Fairly Long Song Title (Extended Remix)",
+                                                        artist: "Some Artist", date: Date())
+                    if let content = MediaHUD.Content(skip: .next, event: sample) { MediaHUD.shared.show(content) }
+                } else if let command = MediaCommand(rawValue: raw) {
+                    MediaHUD.shared.show(command)
+                }
+            }
         }
         // Development aid for visual comparison: `-debugOpenPanel dashboard|settings` opens the popover at launch.
         if let page = UserDefaults.standard.string(forKey: "debugOpenPanel") {
