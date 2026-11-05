@@ -109,7 +109,7 @@ enum Metrics {
     static let badgeSize: CGFloat = 27
     static let badgeGap: CGFloat = 11
     static var textInset: CGFloat { badgeSize + badgeGap }
-    static let rowSpacing: CGFloat = 11
+    static let rowSpacing: CGFloat = 13.5
 }
 
 enum Typography {

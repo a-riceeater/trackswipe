@@ -16,6 +16,9 @@ final class StepMathTests: XCTestCase {
         // Matches the observed macOS key behaviour: 0.4776 → up → 0.5, → down → 0.4375.
         XCTAssertEqual(StepMath.apply(steps: 1, to: 0.4776, fine: false), 0.5, accuracy: 1e-9)
         XCTAssertEqual(StepMath.apply(steps: -1, to: 0.4776, fine: false), 0.4375, accuracy: 1e-9)
+        // A grid point less than 0.1 step away is skipped, as macOS does (0.6839 → 0.75).
+        XCTAssertEqual(StepMath.apply(steps: 1, to: 0.6839, fine: false), 0.75, accuracy: 1e-9)
+        XCTAssertEqual(StepMath.apply(steps: -1, to: 0.6280, fine: false), 0.5625, accuracy: 1e-9)
     }
 
     func testClampsAtBounds() {

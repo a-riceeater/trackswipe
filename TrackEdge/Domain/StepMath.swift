@@ -6,7 +6,10 @@ import Foundation
 enum StepMath {
     static let normalDivisions = 16
     static let fineDivisions = 64
-    private static let epsilon = 1e-4
+    /// Fraction of a grid unit treated as "already there". macOS's own keys skip a grid point that is
+    /// less than ~0.1 step away (measured: brightness 0.6839 → up → 0.75, 0.4776 → up → 0.5), so a
+    /// step always moves a meaningful amount and the predicted value matches what the keys produce.
+    private static let epsilon = 0.1
 
     static func divisions(fine: Bool) -> Int { fine ? fineDivisions : normalDivisions }
 

@@ -325,6 +325,8 @@ struct MoreMenu: View {
         }
         .menuStyle(.borderlessButton)
         .menuIndicator(.hidden)
+        .tint(theme.footerGlyph)
+        .accentColor(theme.footerGlyph)
         .fixedSize()
         .frame(width: 26, height: 24)
         .help("More")
