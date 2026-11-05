@@ -20,7 +20,9 @@
 		30BA64A134A0BCD38BBE1CC4 /* GestureConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF9A06CF9AD3EA77E1364D4 /* GestureConfig.swift */; };
 		325774EC551BCA9CB3ACEE5A /* Controls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFE362281932826107F4BE /* Controls.swift */; };
 		3B78882DF806C8BFCB027808 /* DisplayBrightnessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D54596EED7300F8A6062E96 /* DisplayBrightnessController.swift */; };
+		4ED98CA44E9E2C65AE03A6F8 /* PlaybackObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311636F270F4CF4C32235044 /* PlaybackObserver.swift */; };
 		5E21F9D23E56B543664FFA80 /* MediaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD03C1DF6D8BB8D1D06D00D /* MediaController.swift */; };
+		68F91DA83024673518091C32 /* PlaybackObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F93684E1F95C903F2BC99F /* PlaybackObserverTests.swift */; };
 		6A46009B4894F6D09B1E1835 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06419EC2DA4B576FA42C2D83 /* ActionDispatcher.swift */; };
 		6D039B356BC32EDDCB1691D5 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ED201347DFBC7A9E30C81C /* AppInfo.swift */; };
 		77D89250B7D42A23AB8132BF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F3268661D2BC51F1165A84 /* DashboardView.swift */; };
@@ -62,6 +64,7 @@
 		00F006A9840231040ABCE53C /* StepMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepMath.swift; sourceTree = "<group>"; };
 		023061E04B75FB3E78C31765 /* PermissionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsController.swift; sourceTree = "<group>"; };
 		0277D62F74564058CCFA91DE /* LevelServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelServices.swift; sourceTree = "<group>"; };
+		04F93684E1F95C903F2BC99F /* PlaybackObserverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackObserverTests.swift; sourceTree = "<group>"; };
 		06419EC2DA4B576FA42C2D83 /* ActionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDispatcher.swift; sourceTree = "<group>"; };
 		0865A25EEA6E905DEC91BB32 /* MultitouchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchProvider.swift; sourceTree = "<group>"; };
 		19F3268661D2BC51F1165A84 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
@@ -70,6 +73,7 @@
 		1CEB046577CD0A3C3FA07E54 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		295E8D8029DD91B72882E587 /* TrackEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A608222A8340F91914678BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		311636F270F4CF4C32235044 /* PlaybackObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackObserver.swift; sourceTree = "<group>"; };
 		3D5F46D6F0263653CF433992 /* PopoverRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverRootView.swift; sourceTree = "<group>"; };
 		4CC27B05B9E94193261D71AD /* SystemOSDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemOSDController.swift; sourceTree = "<group>"; };
 		4FF9A06CF9AD3EA77E1364D4 /* GestureConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureConfig.swift; sourceTree = "<group>"; };
@@ -131,6 +135,7 @@
 			children = (
 				62C8E897A41FAF1761F063A3 /* ControlMappingTests.swift */,
 				8A70D74B7F0A4DBCB4592939 /* GestureRecognizerTests.swift */,
+				04F93684E1F95C903F2BC99F /* PlaybackObserverTests.swift */,
 				9B9352CC77C5F6D391B1AD17 /* SettingsTests.swift */,
 			);
 			path = TrackEdgeTests;
@@ -247,6 +252,7 @@
 				972722A20CA7528F69027798 /* LoginItemController.swift */,
 				7BD03C1DF6D8BB8D1D06D00D /* MediaController.swift */,
 				023061E04B75FB3E78C31765 /* PermissionsController.swift */,
+				311636F270F4CF4C32235044 /* PlaybackObserver.swift */,
 				C2F8FE84447E8CCF80B88343 /* SystemKeyEmitter.swift */,
 				4CC27B05B9E94193261D71AD /* SystemOSDController.swift */,
 			);
@@ -356,6 +362,7 @@
 			files = (
 				F71AD7BE482A335E6A027EC1 /* ControlMappingTests.swift in Sources */,
 				21F5270F96927CA8FD109017 /* GestureRecognizerTests.swift in Sources */,
+				68F91DA83024673518091C32 /* PlaybackObserverTests.swift in Sources */,
 				D8D56CF82AB38D1740F22DA5 /* SettingsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,6 +400,7 @@
 				91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */,
 				1493EDE536C3E00FB666FBAD /* MultitouchProvider.swift in Sources */,
 				A42AA590B723E0010F218083 /* PermissionsController.swift in Sources */,
+				4ED98CA44E9E2C65AE03A6F8 /* PlaybackObserver.swift in Sources */,
 				A6C566357097B0D923A066C9 /* PopoverRootView.swift in Sources */,
 				2D098F2759E9B4CA66430B47 /* SettingsView.swift in Sources */,
 				D75A81D8F48CDDCE47F4F4C2 /* StepMath.swift in Sources */,

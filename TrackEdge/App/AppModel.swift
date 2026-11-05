@@ -60,6 +60,7 @@ final class AppModel: ObservableObject {
     let dispatcher: ActionDispatcher
     let engine: GestureEngine
     private let provider = MultitouchProvider.shared
+    private let playback = PlaybackObserver()
     private var deviceWatcher: DeviceWatcher?
 
     // MARK: Published state
@@ -101,8 +102,8 @@ final class AppModel: ObservableObject {
         dispatcher.onLevelChanged = { [weak self] target, _ in
             Task { @MainActor in self?.refreshLevel(target) }
         }
-        dispatcher.onMediaSent = { command in
-            Task { @MainActor in MediaHUD.shared.show(command) }
+        dispatcher.onMediaSent = { [weak self] command, sentAt in
+            Task { @MainActor in self?.showMediaFeedback(command, sentAt: sentAt) }
         }
         dispatcher.onSlideStateChanged = { [weak self] target in
             Task { @MainActor in self?.activeSlide = target }
@@ -318,9 +319,26 @@ final class AppModel: ObservableObject {
     /// Sends a media command outside of gestures (Diagnostics) with the same on-screen feedback.
     @discardableResult
     func sendMedia(_ command: MediaCommand) -> Bool {
+        let sentAt = Date()
         let ok = media.send(command)
-        if ok { MediaHUD.shared.show(command) }
+        if ok { showMediaFeedback(command, sentAt: sentAt) }
         return ok
+    }
+
+    /// Next/previous show immediately. Play/pause waits up to 0.5 s for Spotify/Music to report the
+    /// resulting state ("Playing"/"Paused"); other players get the neutral "Play / Pause".
+    private func showMediaFeedback(_ command: MediaCommand, sentAt: Date) {
+        guard command == .playPause else {
+            MediaHUD.shared.show(command)
+            return
+        }
+        playback.waitForChange(after: sentAt.addingTimeInterval(-0.05), timeout: 0.5) { event in
+            if let event {
+                MediaHUD.shared.show(MediaHUD.Content(event))
+            } else {
+                MediaHUD.shared.show(.playPause)
+            }
+        }
     }
 
     func requestAccessibility() {

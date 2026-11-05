@@ -22,7 +22,8 @@ final class ActionDispatcher {
     var onSlideStateChanged: ((SlideTarget?) -> Void)?
     var onCommand: ((GestureCommand) -> Void)?
     /// Called after a media command was actually delivered (drives the on-screen indicator).
-    var onMediaSent: ((MediaCommand) -> Void)?
+    /// The date is captured just before sending, so playback broadcasts can be matched to this command.
+    var onMediaSent: ((MediaCommand, Date) -> Void)?
 
     private let queue: DispatchQueue
     private let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "Actions")
@@ -148,9 +149,10 @@ final class ActionDispatcher {
             onLevelChanged?(.volume, -1)
 
         case let .media(mediaCommand):
+            let sentAt = Date()
             if media.send(mediaCommand) {
                 haptics.perform(options.haptics, on: deviceID)
-                onMediaSent?(mediaCommand)
+                onMediaSent?(mediaCommand, sentAt)
             }
         }
     }

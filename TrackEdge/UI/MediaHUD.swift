@@ -13,8 +13,33 @@ final class MediaHUD {
     private var hideWork: DispatchWorkItem?
     private let size = NSSize(width: 230, height: 54)
 
+    struct Content: Equatable {
+        let symbol: String
+        let title: String
+        let subtitle: String
+
+        init(_ command: MediaCommand) {
+            switch command {
+            case .next: symbol = "forward.fill"; title = "Next Track"
+            case .previous: symbol = "backward.fill"; title = "Previous Track"
+            case .playPause: symbol = "playpause.fill"; title = "Play / Pause"
+            }
+            subtitle = "Media Strip"
+        }
+
+        init(_ event: PlaybackObserver.Event) {
+            symbol = event.state == .playing ? "play.fill" : "pause.fill"
+            title = event.state == .playing ? "Playing" : "Paused"
+            subtitle = event.app
+        }
+    }
+
     func show(_ command: MediaCommand) {
-        let view = MediaHUDView(command: command)
+        show(Content(command))
+    }
+
+    func show(_ content: Content) {
+        let view = MediaHUDView(content: content)
         let panel = self.panel ?? makePanel()
         if let hosting {
             hosting.rootView = view
@@ -74,23 +99,10 @@ final class MediaHUD {
 }
 
 struct MediaHUDView: View {
-    let command: MediaCommand
+    let content: MediaHUD.Content
 
-    private var symbol: String {
-        switch command {
-        case .next: return "forward.fill"
-        case .previous: return "backward.fill"
-        case .playPause: return "playpause.fill"
-        }
-    }
-
-    private var title: String {
-        switch command {
-        case .next: return "Next Track"
-        case .previous: return "Previous Track"
-        case .playPause: return "Play / Pause"
-        }
-    }
+    private var symbol: String { content.symbol }
+    private var title: String { content.title }
 
     var body: some View {
         HStack(spacing: 12) {
@@ -104,7 +116,7 @@ struct MediaHUDView: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text(title)
                     .font(.system(size: 13, weight: .semibold))
-                Text("Media Strip")
+                Text(content.subtitle)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
@@ -115,6 +127,6 @@ struct MediaHUDView: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(title)")
+        .accessibilityLabel("\(title), \(content.subtitle)")
     }
 }
