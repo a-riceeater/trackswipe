@@ -1,0 +1,650 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		009161C993245CBA01645C16 /* InputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59D43B8714391B51A5BFC32E /* InputState.swift */; };
+		014C9077E5344A4497125242 /* HapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE4CE89CB6769B0EDA1B1AE /* HapticEngine.swift */; };
+		082B9F45C95DBB1438688F6B /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91EBB581886B10F4E415D38 /* AppSettings.swift */; };
+		0AD3F413D56A6B97E2026FEA /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CEB046577CD0A3C3FA07E54 /* AppModel.swift */; };
+		1493EDE536C3E00FB666FBAD /* MultitouchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0865A25EEA6E905DEC91BB32 /* MultitouchProvider.swift */; };
+		21F5270F96927CA8FD109017 /* GestureRecognizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A70D74B7F0A4DBCB4592939 /* GestureRecognizerTests.swift */; };
+		265B4037FD5D1E3B91D9F1D0 /* SystemKeyEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F8FE84447E8CCF80B88343 /* SystemKeyEmitter.swift */; };
+		2949C5848F9CCCF8CD5E0A50 /* LoginItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972722A20CA7528F69027798 /* LoginItemController.swift */; };
+		29ECB8171EAAAC38DFD306A5 /* GestureTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B29BDE72E4DC8EF056558C6 /* GestureTypes.swift */; };
+		2D098F2759E9B4CA66430B47 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE62569973F3B7614AD80D18 /* SettingsView.swift */; };
+		30BA64A134A0BCD38BBE1CC4 /* GestureConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF9A06CF9AD3EA77E1364D4 /* GestureConfig.swift */; };
+		325774EC551BCA9CB3ACEE5A /* Controls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9DFE362281932826107F4BE /* Controls.swift */; };
+		3B78882DF806C8BFCB027808 /* DisplayBrightnessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D54596EED7300F8A6062E96 /* DisplayBrightnessController.swift */; };
+		5E21F9D23E56B543664FFA80 /* MediaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD03C1DF6D8BB8D1D06D00D /* MediaController.swift */; };
+		6A46009B4894F6D09B1E1835 /* ActionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06419EC2DA4B576FA42C2D83 /* ActionDispatcher.swift */; };
+		6D039B356BC32EDDCB1691D5 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ED201347DFBC7A9E30C81C /* AppInfo.swift */; };
+		77D89250B7D42A23AB8132BF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F3268661D2BC51F1165A84 /* DashboardView.swift */; };
+		80B3C1056C2BFE643A8737D8 /* LevelServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277D62F74564058CCFA91DE /* LevelServices.swift */; };
+		8A7D27D1096DBFBA60B81DBB /* DeviceWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EFD592457CE25287541B36 /* DeviceWatcher.swift */; };
+		915CD15DAB905953752B4EA4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D718F098DD7A77F07E7493 /* Theme.swift */; };
+		91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */; };
+		9540A6C7D5F5164DE5179174 /* Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98AA837DE27706CFA819DC7 /* Brand.swift */; };
+		95C0184F57CFEF9E45EF1888 /* GestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB08BFB8B31644D7CDDB1FC5 /* GestureRecognizer.swift */; };
+		A42AA590B723E0010F218083 /* PermissionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023061E04B75FB3E78C31765 /* PermissionsController.swift */; };
+		A5E736F3A1B6C1DD1C21F1CC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A207585A9178A7A9A52FDB4 /* AppDelegate.swift */; };
+		A6C566357097B0D923A066C9 /* PopoverRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5F46D6F0263653CF433992 /* PopoverRootView.swift */; };
+		A7A72F3EE877DA8E9C0E0712 /* MenuBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CB852D2D6067B5A90BABA1 /* MenuBarController.swift */; };
+		B756FD3B915C0A8BBD375DE5 /* CursorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B5BAA9D3CF60E1E0D92E1D /* CursorManager.swift */; };
+		B7C71A42B51E7B14A8AA83A9 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE023D921C5EA711FFC5A6F1 /* AudioController.swift */; };
+		C9E0CA3D29EDC3948B8751A6 /* GestureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA9DBBF6DD5F9EE6AFD03B /* GestureEngine.swift */; };
+		D75A81D8F48CDDCE47F4F4C2 /* StepMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F006A9840231040ABCE53C /* StepMath.swift */; };
+		D8D56CF82AB38D1740F22DA5 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9352CC77C5F6D391B1AD17 /* SettingsTests.swift */; };
+		DA7BDEAF41DF9D46321B424F /* SystemOSDController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC27B05B9E94193261D71AD /* SystemOSDController.swift */; };
+		E0C04F0A2B8BC04F5A612BEF /* Locking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBE697BFEEE6B9AF52BA2DD /* Locking.swift */; };
+		F0B002154C93F2E5C7F9DADA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEFCB369131AAA184AFDBC46 /* Assets.xcassets */; };
+		F71AD7BE482A335E6A027EC1 /* ControlMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C8E897A41FAF1761F063A3 /* ControlMappingTests.swift */; };
+		FA93A7B5236BD5F1EE174A83 /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0186B37130A409D52214D1C /* DiagnosticsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		761ADA9173660B79F43C76E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79E80B124E1BB2EBCBD340C6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83051CB9171AC54111CA0CA1;
+			remoteInfo = TrackEdge;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00F006A9840231040ABCE53C /* StepMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepMath.swift; sourceTree = "<group>"; };
+		023061E04B75FB3E78C31765 /* PermissionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsController.swift; sourceTree = "<group>"; };
+		0277D62F74564058CCFA91DE /* LevelServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelServices.swift; sourceTree = "<group>"; };
+		06419EC2DA4B576FA42C2D83 /* ActionDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDispatcher.swift; sourceTree = "<group>"; };
+		0865A25EEA6E905DEC91BB32 /* MultitouchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchProvider.swift; sourceTree = "<group>"; };
+		19F3268661D2BC51F1165A84 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		1A207585A9178A7A9A52FDB4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1CEB046577CD0A3C3FA07E54 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		295E8D8029DD91B72882E587 /* TrackEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A608222A8340F91914678BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3D5F46D6F0263653CF433992 /* PopoverRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverRootView.swift; sourceTree = "<group>"; };
+		4CC27B05B9E94193261D71AD /* SystemOSDController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemOSDController.swift; sourceTree = "<group>"; };
+		4FF9A06CF9AD3EA77E1364D4 /* GestureConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureConfig.swift; sourceTree = "<group>"; };
+		59D43B8714391B51A5BFC32E /* InputState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputState.swift; sourceTree = "<group>"; };
+		5B29BDE72E4DC8EF056558C6 /* GestureTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureTypes.swift; sourceTree = "<group>"; };
+		5BBE697BFEEE6B9AF52BA2DD /* Locking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locking.swift; sourceTree = "<group>"; };
+		5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchBridge.swift; sourceTree = "<group>"; };
+		62C8E897A41FAF1761F063A3 /* ControlMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlMappingTests.swift; sourceTree = "<group>"; };
+		73B5BAA9D3CF60E1E0D92E1D /* CursorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorManager.swift; sourceTree = "<group>"; };
+		7BD03C1DF6D8BB8D1D06D00D /* MediaController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaController.swift; sourceTree = "<group>"; };
+		7BFA9DBBF6DD5F9EE6AFD03B /* GestureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureEngine.swift; sourceTree = "<group>"; };
+		7D54596EED7300F8A6062E96 /* DisplayBrightnessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessController.swift; sourceTree = "<group>"; };
+		82D718F098DD7A77F07E7493 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		85E6C42775900582B3DE0B39 /* TrackEdge-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TrackEdge-Bridging-Header.h"; sourceTree = "<group>"; };
+		8A70D74B7F0A4DBCB4592939 /* GestureRecognizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureRecognizerTests.swift; sourceTree = "<group>"; };
+		972722A20CA7528F69027798 /* LoginItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemController.swift; sourceTree = "<group>"; };
+		98EFD592457CE25287541B36 /* DeviceWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceWatcher.swift; sourceTree = "<group>"; };
+		9B9352CC77C5F6D391B1AD17 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
+		9C5D150882592AD2DA50668F /* TrackEdgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackEdgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A98AA837DE27706CFA819DC7 /* Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brand.swift; sourceTree = "<group>"; };
+		B91EBB581886B10F4E415D38 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		B9ED201347DFBC7A9E30C81C /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
+		BFE4CE89CB6769B0EDA1B1AE /* HapticEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticEngine.swift; sourceTree = "<group>"; };
+		C0CB852D2D6067B5A90BABA1 /* MenuBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarController.swift; sourceTree = "<group>"; };
+		C2F8FE84447E8CCF80B88343 /* SystemKeyEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeyEmitter.swift; sourceTree = "<group>"; };
+		C9DFE362281932826107F4BE /* Controls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Controls.swift; sourceTree = "<group>"; };
+		CE447C8C5319D5A2AD107332 /* MultitouchTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultitouchTypes.h; sourceTree = "<group>"; };
+		CE62569973F3B7614AD80D18 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		CEFCB369131AAA184AFDBC46 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DE023D921C5EA711FFC5A6F1 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
+		E0186B37130A409D52214D1C /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
+		EB08BFB8B31644D7CDDB1FC5 /* GestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureRecognizer.swift; sourceTree = "<group>"; };
+		ED2599BF3929A5A0417E7456 /* TrackEdge.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TrackEdge.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		04351F9AB8EE5552AC8C84A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				295E8D8029DD91B72882E587 /* TrackEdge.app */,
+				9C5D150882592AD2DA50668F /* TrackEdgeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		10E590DDE14A9055AA17C7F1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CEFCB369131AAA184AFDBC46 /* Assets.xcassets */,
+				2A608222A8340F91914678BC /* Info.plist */,
+				ED2599BF3929A5A0417E7456 /* TrackEdge.entitlements */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		24F8E16247C2CA46243A14B1 /* TrackEdgeTests */ = {
+			isa = PBXGroup;
+			children = (
+				62C8E897A41FAF1761F063A3 /* ControlMappingTests.swift */,
+				8A70D74B7F0A4DBCB4592939 /* GestureRecognizerTests.swift */,
+				9B9352CC77C5F6D391B1AD17 /* SettingsTests.swift */,
+			);
+			path = TrackEdgeTests;
+			sourceTree = "<group>";
+		};
+		270820A4B080C829EA6247A1 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				1A207585A9178A7A9A52FDB4 /* AppDelegate.swift */,
+				B9ED201347DFBC7A9E30C81C /* AppInfo.swift */,
+				1CEB046577CD0A3C3FA07E54 /* AppModel.swift */,
+				C0CB852D2D6067B5A90BABA1 /* MenuBarController.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2E053B5E275A6BDBC10CA8D1 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B91EBB581886B10F4E415D38 /* AppSettings.swift */,
+				4FF9A06CF9AD3EA77E1364D4 /* GestureConfig.swift */,
+				EB08BFB8B31644D7CDDB1FC5 /* GestureRecognizer.swift */,
+				5B29BDE72E4DC8EF056558C6 /* GestureTypes.swift */,
+				5BBE697BFEEE6B9AF52BA2DD /* Locking.swift */,
+				00F006A9840231040ABCE53C /* StepMath.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		433405AB5A00604660628A4B /* Diagnostics */ = {
+			isa = PBXGroup;
+			children = (
+				E0186B37130A409D52214D1C /* DiagnosticsView.swift */,
+			);
+			path = Diagnostics;
+			sourceTree = "<group>";
+		};
+		48B29A51D83C9FE0F8BDA5EA /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				C9DFE362281932826107F4BE /* Controls.swift */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		68D202F13820082E90384A7A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				06419EC2DA4B576FA42C2D83 /* ActionDispatcher.swift */,
+				7BFA9DBBF6DD5F9EE6AFD03B /* GestureEngine.swift */,
+				0277D62F74564058CCFA91DE /* LevelServices.swift */,
+				BC699BE419FA28D236C1F7DF /* Multitouch */,
+				C824ECF76E1EA4D95F49FB59 /* System */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		9B0E7CF6C9F0C185743DB7CA /* Bridging */ = {
+			isa = PBXGroup;
+			children = (
+				CE447C8C5319D5A2AD107332 /* MultitouchTypes.h */,
+				85E6C42775900582B3DE0B39 /* TrackEdge-Bridging-Header.h */,
+			);
+			path = Bridging;
+			sourceTree = "<group>";
+		};
+		A02FB8BD7260D8454F17D581 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A98AA837DE27706CFA819DC7 /* Brand.swift */,
+				19F3268661D2BC51F1165A84 /* DashboardView.swift */,
+				3D5F46D6F0263653CF433992 /* PopoverRootView.swift */,
+				CE62569973F3B7614AD80D18 /* SettingsView.swift */,
+				82D718F098DD7A77F07E7493 /* Theme.swift */,
+				48B29A51D83C9FE0F8BDA5EA /* Controls */,
+				433405AB5A00604660628A4B /* Diagnostics */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		BC699BE419FA28D236C1F7DF /* Multitouch */ = {
+			isa = PBXGroup;
+			children = (
+				98EFD592457CE25287541B36 /* DeviceWatcher.swift */,
+				5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */,
+				0865A25EEA6E905DEC91BB32 /* MultitouchProvider.swift */,
+			);
+			path = Multitouch;
+			sourceTree = "<group>";
+		};
+		BF16A89611232512BFF3E9FA /* TrackEdge */ = {
+			isa = PBXGroup;
+			children = (
+				270820A4B080C829EA6247A1 /* App */,
+				9B0E7CF6C9F0C185743DB7CA /* Bridging */,
+				2E053B5E275A6BDBC10CA8D1 /* Domain */,
+				10E590DDE14A9055AA17C7F1 /* Resources */,
+				68D202F13820082E90384A7A /* Services */,
+				A02FB8BD7260D8454F17D581 /* UI */,
+			);
+			path = TrackEdge;
+			sourceTree = "<group>";
+		};
+		C824ECF76E1EA4D95F49FB59 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				DE023D921C5EA711FFC5A6F1 /* AudioController.swift */,
+				73B5BAA9D3CF60E1E0D92E1D /* CursorManager.swift */,
+				7D54596EED7300F8A6062E96 /* DisplayBrightnessController.swift */,
+				BFE4CE89CB6769B0EDA1B1AE /* HapticEngine.swift */,
+				59D43B8714391B51A5BFC32E /* InputState.swift */,
+				972722A20CA7528F69027798 /* LoginItemController.swift */,
+				7BD03C1DF6D8BB8D1D06D00D /* MediaController.swift */,
+				023061E04B75FB3E78C31765 /* PermissionsController.swift */,
+				C2F8FE84447E8CCF80B88343 /* SystemKeyEmitter.swift */,
+				4CC27B05B9E94193261D71AD /* SystemOSDController.swift */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		DC379C51FDC51FD23D5F5144 = {
+			isa = PBXGroup;
+			children = (
+				BF16A89611232512BFF3E9FA /* TrackEdge */,
+				24F8E16247C2CA46243A14B1 /* TrackEdgeTests */,
+				04351F9AB8EE5552AC8C84A9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6483ED9534A8AA5C5A114705 /* TrackEdgeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FEDEB39C1096E8C4AE62C5C4 /* Build configuration list for PBXNativeTarget "TrackEdgeTests" */;
+			buildPhases = (
+				7DB7907393F069BE6308A53E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1BBBDE38BF1D59B9358D3F0F /* PBXTargetDependency */,
+			);
+			name = TrackEdgeTests;
+			packageProductDependencies = (
+			);
+			productName = TrackEdgeTests;
+			productReference = 9C5D150882592AD2DA50668F /* TrackEdgeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		83051CB9171AC54111CA0CA1 /* TrackEdge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E29C1B808B6668EB2B6B3EAC /* Build configuration list for PBXNativeTarget "TrackEdge" */;
+			buildPhases = (
+				A26246FBACC16CEF19FE1085 /* Sources */,
+				12C4386F08631D4389B31F33 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TrackEdge;
+			packageProductDependencies = (
+			);
+			productName = TrackEdge;
+			productReference = 295E8D8029DD91B72882E587 /* TrackEdge.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		79E80B124E1BB2EBCBD340C6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					6483ED9534A8AA5C5A114705 = {
+						ProvisioningStyle = Manual;
+					};
+					83051CB9171AC54111CA0CA1 = {
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = E66B1933B69EF85BDFF3788E /* Build configuration list for PBXProject "TrackEdge" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DC379C51FDC51FD23D5F5144;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 04351F9AB8EE5552AC8C84A9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				83051CB9171AC54111CA0CA1 /* TrackEdge */,
+				6483ED9534A8AA5C5A114705 /* TrackEdgeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		12C4386F08631D4389B31F33 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0B002154C93F2E5C7F9DADA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7DB7907393F069BE6308A53E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F71AD7BE482A335E6A027EC1 /* ControlMappingTests.swift in Sources */,
+				21F5270F96927CA8FD109017 /* GestureRecognizerTests.swift in Sources */,
+				D8D56CF82AB38D1740F22DA5 /* SettingsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A26246FBACC16CEF19FE1085 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A46009B4894F6D09B1E1835 /* ActionDispatcher.swift in Sources */,
+				A5E736F3A1B6C1DD1C21F1CC /* AppDelegate.swift in Sources */,
+				6D039B356BC32EDDCB1691D5 /* AppInfo.swift in Sources */,
+				0AD3F413D56A6B97E2026FEA /* AppModel.swift in Sources */,
+				082B9F45C95DBB1438688F6B /* AppSettings.swift in Sources */,
+				B7C71A42B51E7B14A8AA83A9 /* AudioController.swift in Sources */,
+				9540A6C7D5F5164DE5179174 /* Brand.swift in Sources */,
+				325774EC551BCA9CB3ACEE5A /* Controls.swift in Sources */,
+				B756FD3B915C0A8BBD375DE5 /* CursorManager.swift in Sources */,
+				77D89250B7D42A23AB8132BF /* DashboardView.swift in Sources */,
+				8A7D27D1096DBFBA60B81DBB /* DeviceWatcher.swift in Sources */,
+				FA93A7B5236BD5F1EE174A83 /* DiagnosticsView.swift in Sources */,
+				3B78882DF806C8BFCB027808 /* DisplayBrightnessController.swift in Sources */,
+				30BA64A134A0BCD38BBE1CC4 /* GestureConfig.swift in Sources */,
+				C9E0CA3D29EDC3948B8751A6 /* GestureEngine.swift in Sources */,
+				95C0184F57CFEF9E45EF1888 /* GestureRecognizer.swift in Sources */,
+				29ECB8171EAAAC38DFD306A5 /* GestureTypes.swift in Sources */,
+				014C9077E5344A4497125242 /* HapticEngine.swift in Sources */,
+				009161C993245CBA01645C16 /* InputState.swift in Sources */,
+				80B3C1056C2BFE643A8737D8 /* LevelServices.swift in Sources */,
+				E0C04F0A2B8BC04F5A612BEF /* Locking.swift in Sources */,
+				2949C5848F9CCCF8CD5E0A50 /* LoginItemController.swift in Sources */,
+				5E21F9D23E56B543664FFA80 /* MediaController.swift in Sources */,
+				A7A72F3EE877DA8E9C0E0712 /* MenuBarController.swift in Sources */,
+				91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */,
+				1493EDE536C3E00FB666FBAD /* MultitouchProvider.swift in Sources */,
+				A42AA590B723E0010F218083 /* PermissionsController.swift in Sources */,
+				A6C566357097B0D923A066C9 /* PopoverRootView.swift in Sources */,
+				2D098F2759E9B4CA66430B47 /* SettingsView.swift in Sources */,
+				D75A81D8F48CDDCE47F4F4C2 /* StepMath.swift in Sources */,
+				265B4037FD5D1E3B91D9F1D0 /* SystemKeyEmitter.swift in Sources */,
+				DA7BDEAF41DF9D46321B424F /* SystemOSDController.swift in Sources */,
+				915CD15DAB905953752B4EA4 /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1BBBDE38BF1D59B9358D3F0F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83051CB9171AC54111CA0CA1 /* TrackEdge */;
+			targetProxy = 761ADA9173660B79F43C76E7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3D6F3652AA2CBD220950125E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.trackedge.TrackEdgeTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrackEdge.app/Contents/MacOS/TrackEdge";
+			};
+			name = Release;
+		};
+		5655C43458E507F0D00526C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TrackEdge/Resources/TrackEdge.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TrackEdge/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.trackedge.TrackEdge;
+				PRODUCT_NAME = TrackEdge;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "TrackEdge/Bridging/TrackEdge-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		595A6DCD858F0A657910BCDC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		7E2768A22CE7076516591F20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C2DFAC1624AF1AB218A3A5CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.trackedge.TrackEdgeTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrackEdge.app/Contents/MacOS/TrackEdge";
+			};
+			name = Debug;
+		};
+		FDA824879A7DDF945D4C4793 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = TrackEdge/Resources/TrackEdge.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TrackEdge/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.trackedge.TrackEdge;
+				PRODUCT_NAME = TrackEdge;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "TrackEdge/Bridging/TrackEdge-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E29C1B808B6668EB2B6B3EAC /* Build configuration list for PBXNativeTarget "TrackEdge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FDA824879A7DDF945D4C4793 /* Debug */,
+				5655C43458E507F0D00526C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E66B1933B69EF85BDFF3788E /* Build configuration list for PBXProject "TrackEdge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				595A6DCD858F0A657910BCDC /* Debug */,
+				7E2768A22CE7076516591F20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FEDEB39C1096E8C4AE62C5C4 /* Build configuration list for PBXNativeTarget "TrackEdgeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C2DFAC1624AF1AB218A3A5CE /* Debug */,
+				3D6F3652AA2CBD220950125E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 79E80B124E1BB2EBCBD340C6 /* Project object */;
+}
