@@ -50,12 +50,8 @@ if (( NOTARIZE )); then
   rm "$ZIP" && ditto -c -k --keepParent "$APP" "$ZIP"
 fi
 
-# 4. DMG: the stapled app next to an /Applications shortcut for drag-to-install.
-STAGE="build/dmg"
-rm -rf "$STAGE" && mkdir -p "$STAGE"
-ditto "$APP" "$STAGE/TrackEdge.app"
-ln -s /Applications "$STAGE/Applications"
-hdiutil create -quiet -volname "TrackEdge $VERSION" -srcfolder "$STAGE" -fs HFS+ -format UDZO -ov "$DMG"
+# 4. Styled drag-to-install DMG containing the stapled app.
+scripts/make_dmg.sh "$APP" "$DMG"
 if [[ "$IDENTITY" != "-" ]]; then
   codesign --force --timestamp --sign "$IDENTITY" "$DMG"
 fi
