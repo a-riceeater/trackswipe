@@ -65,10 +65,8 @@ func render(scale: CGFloat) -> Data {
     drawText {
         // Unflipped coordinates: y measured from the bottom.
         text("Install TrackEdge", size: 22, weight: .semibold, color: color(0x1C1C1E), y: 400 - 64)
-        text("Drag TrackEdge into Applications, then open it from there.", size: 13, weight: .regular,
-             color: color(0x4E4E55), y: 400 - 352)
-        text("It lives in your menu bar  ·  Allow Accessibility for the native HUD and media keys", size: 11,
-             weight: .regular, color: color(0x8A8A92), y: 400 - 374)
+        text("Drag TrackEdge into Applications to install", size: 13, weight: .regular,
+             color: color(0x4E4E55), y: 400 - 358)
     }
     NSGraphicsContext.restoreGraphicsState()
     return rep.representation(using: .png, properties: [:])!
