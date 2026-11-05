@@ -11,9 +11,9 @@ packages:
     from: "2.10.1"
 settings:
   base:
-    MARKETING_VERSION: "1.1.1"
+    MARKETING_VERSION: "1.1.2"
     # Sparkle compares this build number; it must increase with every release.
-    CURRENT_PROJECT_VERSION: "3"
+    CURRENT_PROJECT_VERSION: "4"
     SWIFT_VERSION: "5.0"
     MACOSX_DEPLOYMENT_TARGET: "13.0"
     ENABLE_USER_SCRIPT_SANDBOXING: YES
