@@ -206,8 +206,15 @@ The version comes from `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `pro
 ```sh
 scripts/package.sh                                            # ad-hoc, local testing
 SIGN_IDENTITY="Developer ID Application: Name (TEAMID)" \
-NOTARY_PROFILE=my-notary-profile scripts/package.sh           # signed, notarized, stapled → dist/TrackEdge-<version>.zip
+NOTARY_PROFILE=my-notary-profile scripts/package.sh           # signed, notarized, stapled
 ```
+
+This produces two equivalent artifacts in `dist/`:
+
+- **`TrackEdge-<version>.dmg`**, the recommended download. It holds the app next to an Applications shortcut for drag-to-install. Both the DMG and the app inside are signed, notarized and stapled.
+- **`TrackEdge-<version>.zip`**, the same notarized app, for people who prefer a zip.
+
+Both builds are universal (arm64 + x86_64).
 
 The hardened runtime is on, and the entitlements file explicitly disables the sandbox. Install the app in `/Applications` so login-item registration is stable.
 
