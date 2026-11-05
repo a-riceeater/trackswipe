@@ -153,6 +153,17 @@ struct DiagnosticsView: View {
                         }
                     }
                 }
+                HStack(spacing: 6) {
+                    Text("Haptic waveforms:").font(.caption)
+                    ForEach([Int32(1), 2, 3, 4, 5, 6], id: \.self) { id in
+                        Button("\(id)") {
+                            test {
+                                model.haptics.test(actuationID: id)
+                                return "Waveform \(id) — rest a finger on the trackpad to feel it (current mapping in HapticEngine.waveforms)"
+                            }
+                        }
+                    }
+                }
                 if !testResult.isEmpty {
                     Text(testResult).font(.caption.monospaced()).foregroundColor(.secondary)
                 }

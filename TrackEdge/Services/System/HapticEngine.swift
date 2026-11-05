@@ -2,7 +2,14 @@ import AppKit
 import os
 
 protocol HapticPerforming: AnyObject {
-    func perform(_ strength: HapticStrength, on deviceID: UInt64?)
+    /// `fine` marks a quarter-step tick, which plays a softer waveform than the chosen strength.
+    func perform(_ strength: HapticStrength, fine: Bool, on deviceID: UInt64?)
+}
+
+extension HapticPerforming {
+    func perform(_ strength: HapticStrength, on deviceID: UInt64?) {
+        perform(strength, fine: false, on: deviceID)
+    }
 }
 
 /// Trackpad haptics.
@@ -29,15 +36,19 @@ final class HapticEngine: HapticPerforming {
         }
     }
 
-    /// Actuation waveform IDs. 3/4/6 give clearly distinguishable weak/medium/strong ticks on
-    /// current Force Touch trackpads (community-documented, verify per device).
-    private static func actuationID(for strength: HapticStrength) -> Int32? {
-        switch strength {
-        case .off: return nil
-        case .light: return 3
-        case .medium: return 4
-        case .strong: return 6
-        }
+    /// Actuation waveform IDs, lightest first on current Force Touch trackpads
+    /// (community-documented; feel them in Diagnostics › Haptic waveforms and retune here).
+    /// Slides tick on every step, so even "Strong" stays well below a force click (5/6).
+    /// Quarter steps (⇧⌥) come four times as often and drop one waveform lighter.
+    static let waveforms: [HapticStrength: (normal: Int32, fine: Int32)] = [
+        .light: (normal: 2, fine: 1),
+        .medium: (normal: 3, fine: 1),
+        .strong: (normal: 4, fine: 2),
+    ]
+
+    static func actuationID(for strength: HapticStrength, fine: Bool) -> Int32? {
+        guard let entry = waveforms[strength] else { return nil }
+        return fine ? entry.fine : entry.normal
     }
 
     private let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "Haptics")
@@ -47,6 +58,8 @@ final class HapticEngine: HapticPerforming {
     private var lastFire: CFAbsoluteTime = 0
     /// Upper bound on tick rate so fast slides feel like discrete detents rather than a buzz.
     private let minimumInterval: CFTimeInterval = 0.028
+    /// Quarter steps arrive faster; space their ticks further apart so they never blur into a buzz.
+    private let minimumFineInterval: CFTimeInterval = 0.05
 
     deinit { closeAll() }
 
@@ -87,11 +100,30 @@ final class HapticEngine: HapticPerforming {
         }
     }
 
-    func perform(_ strength: HapticStrength, on deviceID: UInt64?) {
-        guard let actuationID = Self.actuationID(for: strength) else { return }
+    func perform(_ strength: HapticStrength, fine: Bool, on deviceID: UInt64?) {
+        guard let actuationID = Self.actuationID(for: strength, fine: fine) else { return }
+        actuate(actuationID, fine: fine, publicPattern: Self.publicPattern(for: strength, fine: fine), on: deviceID)
+    }
+
+    /// Plays a raw waveform ID (Diagnostics tester).
+    func test(actuationID: Int32) {
+        actuate(actuationID, fine: false, publicPattern: .generic, on: nil, throttle: false)
+    }
+
+    private static func publicPattern(for strength: HapticStrength, fine: Bool) -> NSHapticFeedbackManager.FeedbackPattern {
+        if fine { return .alignment }
+        switch strength {
+        case .strong: return .generic
+        default: return .alignment
+        }
+    }
+
+    private func actuate(_ actuationID: Int32, fine: Bool, publicPattern pattern: NSHapticFeedbackManager.FeedbackPattern,
+                         on deviceID: UInt64?, throttle: Bool = true) {
         let now = CFAbsoluteTimeGetCurrent()
+        let interval = fine ? minimumFineInterval : minimumInterval
         let target: (actuator: CFTypeRef?, support: Support) = lock.sync {
-            guard now - lastFire >= minimumInterval else { return (nil, .unsupported) }
+            guard !throttle || now - lastFire >= interval else { return (nil, .unsupported) }
             let id = deviceID ?? support.first(where: { $0.value == .actuator })?.key
             let resolved = id.flatMap { support[$0] } ?? .unsupported
             if resolved != .unsupported { lastFire = now }
@@ -104,12 +136,6 @@ final class HapticEngine: HapticPerforming {
                 if result != 0 { log.debug("MTActuatorActuate returned \(result)") }
             }
         case .publicAPI:
-            let pattern: NSHapticFeedbackManager.FeedbackPattern
-            switch strength {
-            case .light: pattern = .alignment
-            case .medium: pattern = .generic
-            default: pattern = .levelChange
-            }
             DispatchQueue.main.async {
                 NSHapticFeedbackManager.defaultPerformer.perform(pattern, performanceTime: .now)
             }

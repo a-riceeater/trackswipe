@@ -144,7 +144,7 @@ final class ActionDispatcher {
         lastWrite = CFAbsoluteTimeGetCurrent()
         guard let result = controller(for: target).adjust(steps: steps, fine: pendingFine) else { return }
         if result.changed {
-            haptics.perform(options.haptics, on: activeDevice)
+            haptics.perform(options.haptics, fine: pendingFine, on: activeDevice)
         }
         onLevelChanged?(target, result.value)
     }

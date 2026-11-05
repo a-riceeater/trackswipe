@@ -90,10 +90,12 @@ private final class MockMedia: MediaControlling {
 private final class MockHaptics: HapticPerforming {
     var count = 0
     var strengths: [HapticStrength] = []
-    func perform(_ strength: HapticStrength, on deviceID: UInt64?) {
+    var fineFlags: [Bool] = []
+    func perform(_ strength: HapticStrength, fine: Bool, on deviceID: UInt64?) {
         guard strength != .off else { return }
         count += 1
         strengths.append(strength)
+        fineFlags.append(fine)
     }
 }
 
@@ -155,6 +157,22 @@ final class ActionDispatcherTests: XCTestCase {
         dispatcher.executeNow([.adjust(.volume, steps: 1, fine: false), .adjust(.volume, steps: 1, fine: false)], deviceID: 1)
         XCTAssertEqual(volume.value, 1)
         XCTAssertEqual(haptics.count, 1, "no ticks while pinned at 100 %")
+    }
+
+    func testFineStepsRequestSofterHaptics() {
+        dispatcher.executeNow([.slideBegan(.volume), .adjust(.volume, steps: 1, fine: false), .adjust(.volume, steps: 1, fine: true)], deviceID: 1)
+        XCTAssertEqual(haptics.fineFlags, [false, true])
+    }
+
+    func testHapticWaveformsAreLighterForFineSteps() {
+        for strength in [HapticStrength.light, .medium, .strong] {
+            let normal = try! XCTUnwrap(HapticEngine.actuationID(for: strength, fine: false))
+            let fine = try! XCTUnwrap(HapticEngine.actuationID(for: strength, fine: true))
+            XCTAssertLessThan(fine, normal)
+            XCTAssertLessThan(normal, 5, "slide ticks stay below force-click waveforms")
+        }
+        XCTAssertNil(HapticEngine.actuationID(for: .off, fine: false))
+        XCTAssertNil(HapticEngine.actuationID(for: .off, fine: true))
     }
 
     func testHapticsOffMeansNone() {

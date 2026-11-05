@@ -25,7 +25,7 @@ It's written in Swift and SwiftUI, with AppKit for the status item and panel. It
 | **Quick Mute** | Double-tap the top-right corner to toggle output mute. | On |
 | **Media Strip** | Swipe right along the bottom edge for next track, left for previous. One command per stroke. | On |
 | **Tap to Play or Pause** | Tap the bottom strip to play or pause. It only fires after a 0.3 s quiet period and ignores physical clicks. | Off |
-| **Haptic Feedback** | Off / Light / Medium / Strong. One Taptic tick per real step, with no tick when pinned at 0% or 100%. | Strong |
+| **Haptic Feedback** | Off / Light / Medium / Strong. One Taptic tick per real step, with no tick when pinned at 0% or 100%. Fine-control (⇧⌥) ticks use a softer waveform and are spaced at least 50 ms apart. | Strong |
 | **Freeze Cursor** | The pointer stays still while you slide and is always released afterwards. | On |
 | **Fine Control** | Hold ⇧⌥ while sliding for quarter steps (1/64), the same as ⇧⌥ + volume key. | On |
 | **Sensitivity** | 0.5×–4.0× in 0.25× steps. At 1.0× one step takes 6 mm of finger travel, so 1.5× needs 4 mm. | 1.5× |
@@ -49,7 +49,7 @@ xcodegen generate
 xcodebuild -project TrackEdge.xcodeproj -scheme TrackEdge -configuration Debug -derivedDataPath build/DerivedData build
 open build/DerivedData/Build/Products/Debug/TrackEdge.app
 
-# Unit tests (71 tests: recognizer, step math, dispatcher, settings)
+# Unit tests (73 tests: recognizer, step math, dispatcher, settings)
 xcodebuild -project TrackEdge.xcodeproj -scheme TrackEdge -derivedDataPath build/DerivedData test
 ```
 
@@ -115,7 +115,7 @@ MultitouchSupport (private, dlopen)          CGEventSource (modifiers, button)
 | Brightness | Synthesised `NX_KEYTYPE_BRIGHTNESS_UP/DOWN` → native HUD | `DisplayServicesSetBrightness` on the target display |
 | HUD (fallback route only) | `OSDManager` (macOS 13–15) | Labelled TrackEdge indicator (macOS 26+, where `OSDManager` no longer renders) |
 | Media | Synthesised `NX_KEYTYPE_NEXT/PREVIOUS/PLAY` | `MRMediaRemoteSendCommand` |
-| Haptics | `MTActuatorActuate` on the touching device (waveforms 3/4/6 = Light/Medium/Strong) | `NSHapticFeedbackManager` on Force Touch devices; nothing on older trackpads (no fake sounds) |
+| Haptics | `MTActuatorActuate` on the touching device (waveforms 2/3/4 = Light/Medium/Strong; 1/1/2 for fine steps; tune in `HapticEngine.waveforms`) | `NSHapticFeedbackManager` on Force Touch devices; nothing on older trackpads (no fake sounds) |
 | Cursor freeze | `CGAssociateMouseAndMouseCursorPosition(false)` plus re-pinning with `CGWarpMouseCursorPosition` | — |
 
 **Brightness target.** TrackEdge uses the built-in display when the lid is open and DisplayServices can control it. Otherwise it uses the first display DisplayServices can drive, such as a Studio Display, Pro Display XDR or LG UltraFine. Third-party monitors that need **DDC/CI aren't supported**. They show "Unsupported display" rather than a fake gamma dim.
@@ -147,7 +147,7 @@ The C layout of the touch record lives in `TrackEdge/Bridging/MultitouchTypes.h`
 
 ## Developer tools
 
-- **Diagnostics** (⋯ menu › Diagnostics…) shows subsystem status, active routes, live modifier keys (to verify Fn/Globe detection), connected trackpads with size, family and haptic support, and permission buttons. It also has **backend self-test buttons** for volume, mute, brightness, media and haptics that work without any gesture.
+- **Diagnostics** (⋯ menu › Diagnostics…) shows subsystem status, active routes, live modifier keys (to verify Fn/Globe detection), connected trackpads with size, family and haptic support, and permission buttons. It also has **backend self-test buttons** for volume, mute, brightness, media and haptics that work without any gesture, plus a **haptic waveform tester** (IDs 1–6) for retuning how each strength feels.
 - **Touch Inspector** is in Diagnostics and is off by default. It draws the trackpad with its edge, corner and strip zones, live contact IDs and coordinates, the recognizer state, and the last 14 commands. Nothing is written to disk.
 - **DEBUG-only launch arguments:**
   - `-selfTest YES` steps volume and brightness ±1 and ±¼ through the active route, checks the result against the hardware, restores the original values, prints a report and exits.
@@ -165,7 +165,7 @@ build/DerivedData/Build/Products/Debug/TrackEdge.app/Contents/MacOS/TrackEdge -s
 **Automated and verified on a MacBook Air (Apple Silicon, macOS 26.6.1, built-in Force Touch trackpad, family 110):**
 
 - Debug and Release builds succeed with no Swift warnings, and `scripts/package.sh` archives, signs and zips the app.
-- All 71 unit tests pass.
+- All 73 unit tests pass.
 - MultitouchSupport loads, the built-in trackpad starts (121.9 × 74.1 mm), and its Taptic actuator opens.
 - `-selfTest`, through both the key route and the direct route, gave the expected result for every step: volume ±1/16 and ±1/64, brightness ±1/16 and ±1/64. Original values were restored afterwards.
 - Synthesised volume keys show the native macOS 26 volume HUD. `OSDManager` resolves on macOS 26 but renders nothing, which is why macOS 26+ uses the fallback indicator.
@@ -179,7 +179,7 @@ build/DerivedData/Build/Products/Debug/TrackEdge.app/Contents/MacOS/TrackEdge -s
 4. Quick Mute double-tap, with ordinary corner clicks and double-clicks *not* muting.
 5. Media Strip next/previous with Music and Spotify; optional tap play/pause; that MediaRemote works when Accessibility is off.
 6. Fine Control (⇧⌥) with a physically held ⌥ under "Require Fn or ⌥": confirm the key route never opens Sound settings.
-7. Haptic strengths feel distinct (Light/Medium/Strong), and Off is silent.
+7. Haptic strengths feel distinct (Light/Medium/Strong) and fine-step ticks feel lighter; Off is silent. Use the waveform tester to retune if needed.
 8. Freeze Cursor keeps the pointer still while TrackEdge is in the background, and always releases on lift, quit, sleep and lid close.
 9. Open at Login survives logout and login, including a launch from `/Applications`.
 10. Magic Trackpad connect, disconnect and reconnect; sleep/wake; switching audio output (AirPods, HDMI fixed-volume); external Apple and non-Apple displays.
