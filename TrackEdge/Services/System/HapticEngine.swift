@@ -36,14 +36,14 @@ final class HapticEngine: HapticPerforming {
         }
     }
 
-    /// Actuation waveform IDs, lightest first on current Force Touch trackpads
-    /// (community-documented; feel them in Diagnostics › Haptic waveforms and retune here).
-    /// Slides tick on every step, so even "Strong" stays well below a force click (5/6).
-    /// Quarter steps (⇧⌥) come four times as often and drop one waveform lighter.
+    /// Actuation waveform IDs. The IDs are NOT ordered by intensity: on a 2022+ MacBook trackpad,
+    /// waveform 2 feels clearly stronger than 3, and 3 is a good "light" tick. Light/Medium/Strong
+    /// therefore follow the community-documented 3/4/6 progression. Quarter steps (⇧⌥) arrive four
+    /// times as often and always use waveform 1. Feel and retune in Diagnostics › Haptic waveforms.
     static let waveforms: [HapticStrength: (normal: Int32, fine: Int32)] = [
-        .light: (normal: 2, fine: 1),
-        .medium: (normal: 3, fine: 1),
-        .strong: (normal: 4, fine: 1),
+        .light: (normal: 3, fine: 1),
+        .medium: (normal: 4, fine: 1),
+        .strong: (normal: 6, fine: 1),
     ]
 
     static func actuationID(for strength: HapticStrength, fine: Bool) -> Int32? {

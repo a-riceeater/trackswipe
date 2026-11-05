@@ -168,9 +168,10 @@ final class ActionDispatcherTests: XCTestCase {
         for strength in [HapticStrength.light, .medium, .strong] {
             let normal = try! XCTUnwrap(HapticEngine.actuationID(for: strength, fine: false))
             let fine = try! XCTUnwrap(HapticEngine.actuationID(for: strength, fine: true))
-            XCTAssertLessThan(fine, normal)
-            XCTAssertLessThan(normal, 5, "slide ticks stay below force-click waveforms")
+            XCTAssertNotEqual(fine, normal)
         }
+        // Waveform 2 felt stronger than 3 on hardware; 3 is the preferred light tick.
+        XCTAssertEqual(HapticEngine.actuationID(for: .light, fine: false), 3)
         XCTAssertNil(HapticEngine.actuationID(for: .off, fine: false))
         XCTAssertNil(HapticEngine.actuationID(for: .off, fine: true))
     }

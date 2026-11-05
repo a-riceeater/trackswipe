@@ -115,7 +115,7 @@ MultitouchSupport (private, dlopen)          CGEventSource (modifiers, button)
 | Brightness | Synthesised `NX_KEYTYPE_BRIGHTNESS_UP/DOWN` → native HUD | `DisplayServicesSetBrightness` on the target display |
 | HUD (fallback route only) | `OSDManager` (macOS 13–15) | Labelled TrackEdge indicator (macOS 26+, where `OSDManager` no longer renders) |
 | Media | Synthesised `NX_KEYTYPE_NEXT/PREVIOUS/PLAY` | `MRMediaRemoteSendCommand` |
-| Haptics | `MTActuatorActuate` on the touching device (waveforms 2/3/4 = Light/Medium/Strong; 1 for all fine steps; tune in `HapticEngine.waveforms`) | `NSHapticFeedbackManager` on Force Touch devices; nothing on older trackpads (no fake sounds) |
+| Haptics | `MTActuatorActuate` on the touching device (waveforms 3/4/6 = Light/Medium/Strong, 1 for all fine steps; IDs aren't ordered by intensity, so tune by feel in `HapticEngine.waveforms`) | `NSHapticFeedbackManager` on Force Touch devices; nothing on older trackpads (no fake sounds) |
 | Cursor freeze | `CGAssociateMouseAndMouseCursorPosition(false)` plus re-pinning with `CGWarpMouseCursorPosition` | — |
 
 **Brightness target.** TrackEdge uses the built-in display when the lid is open and DisplayServices can control it. Otherwise it uses the first display DisplayServices can drive, such as a Studio Display, Pro Display XDR or LG UltraFine. Third-party monitors that need **DDC/CI aren't supported**. They show "Unsupported display" rather than a fake gamma dim.
