@@ -30,6 +30,7 @@
 		91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */; };
 		9540A6C7D5F5164DE5179174 /* Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98AA837DE27706CFA819DC7 /* Brand.swift */; };
 		95C0184F57CFEF9E45EF1888 /* GestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB08BFB8B31644D7CDDB1FC5 /* GestureRecognizer.swift */; };
+		9F13A368937B172C1723D5EE /* BackendSelfTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674D74C047335DE297614329 /* BackendSelfTest.swift */; };
 		A42AA590B723E0010F218083 /* PermissionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023061E04B75FB3E78C31765 /* PermissionsController.swift */; };
 		A5E736F3A1B6C1DD1C21F1CC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A207585A9178A7A9A52FDB4 /* AppDelegate.swift */; };
 		A6C566357097B0D923A066C9 /* PopoverRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5F46D6F0263653CF433992 /* PopoverRootView.swift */; };
@@ -75,6 +76,7 @@
 		5BBE697BFEEE6B9AF52BA2DD /* Locking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locking.swift; sourceTree = "<group>"; };
 		5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchBridge.swift; sourceTree = "<group>"; };
 		62C8E897A41FAF1761F063A3 /* ControlMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlMappingTests.swift; sourceTree = "<group>"; };
+		674D74C047335DE297614329 /* BackendSelfTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendSelfTest.swift; sourceTree = "<group>"; };
 		73B5BAA9D3CF60E1E0D92E1D /* CursorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorManager.swift; sourceTree = "<group>"; };
 		7BD03C1DF6D8BB8D1D06D00D /* MediaController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaController.swift; sourceTree = "<group>"; };
 		7BFA9DBBF6DD5F9EE6AFD03B /* GestureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureEngine.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				1A207585A9178A7A9A52FDB4 /* AppDelegate.swift */,
 				B9ED201347DFBC7A9E30C81C /* AppInfo.swift */,
 				1CEB046577CD0A3C3FA07E54 /* AppModel.swift */,
+				674D74C047335DE297614329 /* BackendSelfTest.swift */,
 				C0CB852D2D6067B5A90BABA1 /* MenuBarController.swift */,
 			);
 			path = App;
@@ -364,6 +367,7 @@
 				0AD3F413D56A6B97E2026FEA /* AppModel.swift in Sources */,
 				082B9F45C95DBB1438688F6B /* AppSettings.swift in Sources */,
 				B7C71A42B51E7B14A8AA83A9 /* AudioController.swift in Sources */,
+				9F13A368937B172C1723D5EE /* BackendSelfTest.swift in Sources */,
 				9540A6C7D5F5164DE5179174 /* Brand.swift in Sources */,
 				325774EC551BCA9CB3ACEE5A /* Controls.swift in Sources */,
 				B756FD3B915C0A8BBD375DE5 /* CursorManager.swift in Sources */,

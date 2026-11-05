@@ -45,7 +45,12 @@ final class AppModel: ObservableObject {
     // MARK: Services
     let audio = AudioController()
     let display = DisplayBrightnessController()
+    #if DEBUG
+    /// `-forceDirectRoute YES` simulates a Mac without Accessibility to exercise the fallback routes.
+    let keys = UserDefaults.standard.bool(forKey: "forceDirectRoute") ? SystemKeyEmitter(permissions: { false }) : SystemKeyEmitter()
+    #else
     let keys = SystemKeyEmitter()
+    #endif
     let osd = SystemOSDController()
     let cursor = CursorManager()
     let haptics = HapticEngine()

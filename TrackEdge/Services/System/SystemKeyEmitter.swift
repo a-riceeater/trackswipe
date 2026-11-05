@@ -23,12 +23,21 @@ final class SystemKeyEmitter {
     }
 
     private let permissions: () -> Bool
+    private let lock = NSLock()
+    private var cached: (value: Bool, at: CFAbsoluteTime)?
 
     init(permissions: @escaping () -> Bool = { AXIsProcessTrusted() }) {
         self.permissions = permissions
     }
 
-    var isAvailable: Bool { permissions() }
+    /// Accessibility trust, cached for one second (queried on every step of a slide).
+    var isAvailable: Bool {
+        let now = CFAbsoluteTimeGetCurrent()
+        if let cached = lock.sync({ cached }), now - cached.at < 1 { return cached.value }
+        let value = permissions()
+        lock.sync { cached = (value, now) }
+        return value
+    }
 
     /// Posts a key-down/key-up pair. Returns false if the route is unavailable.
     @discardableResult

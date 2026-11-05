@@ -58,9 +58,10 @@ final class MenuBarController: NSObject {
         if isPanelVisible { closePanel() } else { showPanel() }
     }
 
-    func showPanel() {
+    /// - Parameter pinned: development only; keeps the panel open when clicking elsewhere.
+    func showPanel(page: PanelNavigation.Page = .dashboard, pinned: Bool = false) {
         let panel = self.panel ?? makePanel()
-        navigation.page = .dashboard
+        navigation.page = page
         model.surfaceVisibilityChanged(true)
         layoutPanel()
         panel.alphaValue = 0
@@ -70,7 +71,7 @@ final class MenuBarController: NSObject {
             panel.animator().alphaValue = 1
         }
         statusItem.button?.highlight(true)
-        installOutsideClickMonitor()
+        if !pinned { installOutsideClickMonitor() }
     }
 
     func closePanel() {
