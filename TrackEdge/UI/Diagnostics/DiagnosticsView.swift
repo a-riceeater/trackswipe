@@ -143,9 +143,9 @@ struct DiagnosticsView: View {
                     Button("Brightness +") { test { runLevel(model.brightnessService, steps: 1, name: "Brightness") } }
                 }
                 HStack {
-                    Button("Previous") { test { model.media.send(.previous) ? "Sent previous" : "Media unavailable" } }
-                    Button("Play/Pause") { test { model.media.send(.playPause) ? "Sent play/pause" : "Media unavailable" } }
-                    Button("Next") { test { model.media.send(.next) ? "Sent next" : "Media unavailable" } }
+                    Button("Previous") { test { model.sendMedia(.previous) ? "Sent previous" : "Media unavailable" } }
+                    Button("Play/Pause") { test { model.sendMedia(.playPause) ? "Sent play/pause" : "Media unavailable" } }
+                    Button("Next") { test { model.sendMedia(.next) ? "Sent next" : "Media unavailable" } }
                     Button("Haptic") {
                         test {
                             model.haptics.perform(settings.hapticStrength, on: nil)

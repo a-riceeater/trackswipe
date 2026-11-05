@@ -25,6 +25,7 @@
 		6D039B356BC32EDDCB1691D5 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ED201347DFBC7A9E30C81C /* AppInfo.swift */; };
 		77D89250B7D42A23AB8132BF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F3268661D2BC51F1165A84 /* DashboardView.swift */; };
 		80B3C1056C2BFE643A8737D8 /* LevelServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0277D62F74564058CCFA91DE /* LevelServices.swift */; };
+		881D1D0AC6EDD3499EBC9EFD /* MediaHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB5CD31B93EA8AC39A1BE1E /* MediaHUD.swift */; };
 		8A7D27D1096DBFBA60B81DBB /* DeviceWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EFD592457CE25287541B36 /* DeviceWatcher.swift */; };
 		915CD15DAB905953752B4EA4 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D718F098DD7A77F07E7493 /* Theme.swift */; };
 		91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCE4B660FDC34A05C0D469B /* MultitouchBridge.swift */; };
@@ -65,6 +66,7 @@
 		0865A25EEA6E905DEC91BB32 /* MultitouchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultitouchProvider.swift; sourceTree = "<group>"; };
 		19F3268661D2BC51F1165A84 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		1A207585A9178A7A9A52FDB4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1AB5CD31B93EA8AC39A1BE1E /* MediaHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaHUD.swift; sourceTree = "<group>"; };
 		1CEB046577CD0A3C3FA07E54 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		295E8D8029DD91B72882E587 /* TrackEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A608222A8340F91914678BC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 			children = (
 				A98AA837DE27706CFA819DC7 /* Brand.swift */,
 				19F3268661D2BC51F1165A84 /* DashboardView.swift */,
+				1AB5CD31B93EA8AC39A1BE1E /* MediaHUD.swift */,
 				3D5F46D6F0263653CF433992 /* PopoverRootView.swift */,
 				CE62569973F3B7614AD80D18 /* SettingsView.swift */,
 				82D718F098DD7A77F07E7493 /* Theme.swift */,
@@ -385,6 +388,7 @@
 				E0C04F0A2B8BC04F5A612BEF /* Locking.swift in Sources */,
 				2949C5848F9CCCF8CD5E0A50 /* LoginItemController.swift in Sources */,
 				5E21F9D23E56B543664FFA80 /* MediaController.swift in Sources */,
+				881D1D0AC6EDD3499EBC9EFD /* MediaHUD.swift in Sources */,
 				A7A72F3EE877DA8E9C0E0712 /* MenuBarController.swift in Sources */,
 				91A64C454CE68E1F89E781E8 /* MultitouchBridge.swift in Sources */,
 				1493EDE536C3E00FB666FBAD /* MultitouchProvider.swift in Sources */,

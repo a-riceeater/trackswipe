@@ -21,6 +21,8 @@ final class ActionDispatcher {
     var onLevelChanged: ((SlideTarget, Double) -> Void)?
     var onSlideStateChanged: ((SlideTarget?) -> Void)?
     var onCommand: ((GestureCommand) -> Void)?
+    /// Called after a media command was actually delivered (drives the on-screen indicator).
+    var onMediaSent: ((MediaCommand) -> Void)?
 
     private let queue: DispatchQueue
     private let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "Actions")
@@ -146,7 +148,10 @@ final class ActionDispatcher {
             onLevelChanged?(.volume, -1)
 
         case let .media(mediaCommand):
-            if media.send(mediaCommand) { haptics.perform(options.haptics, on: deviceID) }
+            if media.send(mediaCommand) {
+                haptics.perform(options.haptics, on: deviceID)
+                onMediaSent?(mediaCommand)
+            }
         }
     }
 

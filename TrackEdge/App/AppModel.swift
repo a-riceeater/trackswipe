@@ -101,6 +101,9 @@ final class AppModel: ObservableObject {
         dispatcher.onLevelChanged = { [weak self] target, _ in
             Task { @MainActor in self?.refreshLevel(target) }
         }
+        dispatcher.onMediaSent = { command in
+            Task { @MainActor in MediaHUD.shared.show(command) }
+        }
         dispatcher.onSlideStateChanged = { [weak self] target in
             Task { @MainActor in self?.activeSlide = target }
         }
@@ -310,6 +313,14 @@ final class AppModel: ObservableObject {
 
     func setOpenAtLogin(_ enabled: Bool) {
         loginItem = LoginItemController.setEnabled(enabled)
+    }
+
+    /// Sends a media command outside of gestures (Diagnostics) with the same on-screen feedback.
+    @discardableResult
+    func sendMedia(_ command: MediaCommand) -> Bool {
+        let ok = media.send(command)
+        if ok { MediaHUD.shared.show(command) }
+        return ok
     }
 
     func requestAccessibility() {

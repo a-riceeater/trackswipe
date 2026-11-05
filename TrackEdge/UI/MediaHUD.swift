@@ -1,0 +1,120 @@
+import AppKit
+import SwiftUI
+
+/// Brief on-screen confirmation for Media Strip gestures. macOS shows no HUD for media keys, so this
+/// fills the gap. It sits bottom-centre above the Dock, in the same spot as TrackEdge's level indicator,
+/// follows the system appearance and never takes focus or mouse input.
+@MainActor
+final class MediaHUD {
+    static let shared = MediaHUD()
+
+    private var panel: NSPanel?
+    private var hosting: NSHostingView<MediaHUDView>?
+    private var hideWork: DispatchWorkItem?
+    private let size = NSSize(width: 230, height: 54)
+
+    func show(_ command: MediaCommand) {
+        let view = MediaHUDView(command: command)
+        let panel = self.panel ?? makePanel()
+        if let hosting {
+            hosting.rootView = view
+        } else {
+            let hosting = NSHostingView(rootView: view)
+            hosting.frame = NSRect(origin: .zero, size: size)
+            panel.contentView = hosting
+            self.hosting = hosting
+        }
+
+        let screen = NSScreen.screens.first { NSMouseInRect(NSEvent.mouseLocation, $0.frame, false) } ?? NSScreen.main
+        guard let visible = screen?.visibleFrame else { return }
+        let target = NSPoint(x: visible.midX - size.width / 2, y: visible.minY + 96)
+        let wasVisible = panel.isVisible && panel.alphaValue > 0.5
+
+        hideWork?.cancel()
+        if wasVisible {
+            // Repeated swipes just refresh the content in place.
+            panel.setFrameOrigin(target)
+        } else {
+            panel.setFrameOrigin(NSPoint(x: target.x, y: target.y - 8))
+            panel.alphaValue = 0
+            panel.orderFrontRegardless()
+            NSAnimationContext.runAnimationGroup { ctx in
+                ctx.duration = 0.18
+                ctx.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                panel.animator().alphaValue = 1
+                panel.animator().setFrameOrigin(target)
+            }
+        }
+
+        let work = DispatchWorkItem { [weak panel] in
+            NSAnimationContext.runAnimationGroup { ctx in
+                ctx.duration = 0.25
+                panel?.animator().alphaValue = 0
+            } completionHandler: {
+                if panel?.alphaValue == 0 { panel?.orderOut(nil) }
+            }
+        }
+        hideWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2, execute: work)
+    }
+
+    private func makePanel() -> NSPanel {
+        let panel = NSPanel(contentRect: NSRect(origin: .zero, size: size),
+                            styleMask: [.borderless, .nonactivatingPanel],
+                            backing: .buffered, defer: false)
+        panel.isOpaque = false
+        panel.backgroundColor = .clear
+        panel.hasShadow = true
+        panel.level = .statusBar
+        panel.ignoresMouseEvents = true
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
+        self.panel = panel
+        return panel
+    }
+}
+
+struct MediaHUDView: View {
+    let command: MediaCommand
+
+    private var symbol: String {
+        switch command {
+        case .next: return "forward.fill"
+        case .previous: return "backward.fill"
+        case .playPause: return "playpause.fill"
+        }
+    }
+
+    private var title: String {
+        switch command {
+        case .next: return "Next Track"
+        case .previous: return "Previous Track"
+        case .playPause: return "Play / Pause"
+        }
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle().fill(Color(hex: 0x6A44EF))
+                Image(systemName: symbol)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(.white)
+            }
+            .frame(width: 32, height: 32)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(title)
+                    .font(.system(size: 13, weight: .semibold))
+                Text("Media Strip")
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 12)
+        .frame(width: 230, height: 54)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title)")
+    }
+}
