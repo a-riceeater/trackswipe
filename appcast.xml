@@ -6,6 +6,22 @@
     <description>TrackEdge updates</description>
     <language>en</language>
     <item>
+      <title>Version 1.1.1</title>
+      <pubDate>Thu, 05 Nov 2026 06:39:53 GMT</pubDate>
+      <sparkle:version>3</sparkle:version>
+      <sparkle:shortVersionString>1.1.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[
+<h2>Version 1.1.1</h2>
+<ul>
+<li><b>Indicator Setting</b>: Choose where volume and brightness changes appear in Settings › General. <b>TrackEdge</b> (the new default) shows a coral indicator at the bottom of the screen; <b>macOS</b> uses Apple&#x27;s own HUD.</li>
+<li><b>Unified Indicator</b>: Volume, brightness and Media Strip feedback now share one consistent indicator, so they never stack.</li>
+<li>Accessibility is now only needed for media keys, or for Apple&#x27;s HUD if you pick the macOS indicator.</li>
+</ul>
+      ]]></description>
+      <enclosure url="https://github.com/a-riceeater/trackswipe/releases/download/1.1.1/TrackEdge-1.1.1.zip" length="2442366" type="application/octet-stream" sparkle:edSignature="sSRME4GeHvuXlPrUtH+pntLlbgH4A/izqASqG6ArKTtquE4JwBhVemtU+bmzZfLBUpsP+Pvxl+lMlDbrOb1IBA=="/>
+    </item>
+    <item>
       <title>Version 1.1.0</title>
       <pubDate>Thu, 05 Nov 2026 06:25:24 GMT</pubDate>
       <sparkle:version>2</sparkle:version>
