@@ -114,9 +114,10 @@ final class MultitouchProvider {
         }
         for entry in entries {
             bridge.unregisterCallback(entry.ref, multitouchContactCallback)
-            if bridge.isAlive?(entry.ref) ?? true {
-                _ = bridge.stop(entry.ref)
-            }
+            // Always stop: `MTDeviceIsAlive` reports false even for a running device, and skipping the
+            // stop leaked a driver connection and a MultitouchSupport thread on every restart until
+            // frames stopped arriving altogether.
+            _ = bridge.stop(entry.ref)
         }
         // Releasing the list after stopping devices; MultitouchSupport owns the device objects.
         lock.sync { deviceList = nil }

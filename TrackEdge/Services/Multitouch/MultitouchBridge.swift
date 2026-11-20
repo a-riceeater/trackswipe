@@ -41,7 +41,6 @@ final class MultitouchBridge {
     let surfaceDimensions: DimensionsFn
     let familyID: FamilyFn?
     let deviceID: DeviceIDFn?
-    let isAlive: BoolFn?
     let actuatorCreate: ActuatorCreateFn?
     let actuatorOpen: ActuatorOpenFn?
     let actuatorClose: ActuatorCloseFn?
@@ -74,7 +73,6 @@ final class MultitouchBridge {
         surfaceDimensions = dims
         familyID = load("MTDeviceGetFamilyID", as: FamilyFn.self)
         deviceID = load("MTDeviceGetDeviceID", as: DeviceIDFn.self)
-        isAlive = load("MTDeviceIsAlive", as: BoolFn.self)
         actuatorCreate = load("MTActuatorCreateFromDeviceID", as: ActuatorCreateFn.self)
         actuatorOpen = load("MTActuatorOpen", as: ActuatorOpenFn.self)
         actuatorClose = load("MTActuatorClose", as: ActuatorCloseFn.self)

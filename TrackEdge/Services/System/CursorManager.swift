@@ -26,7 +26,7 @@ final class CursorManager: CursorFreezing {
     private let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "Cursor")
     private var frozen = false
     private var pinnedPoint: CGPoint = .zero
-    private var lastActivity: CFAbsoluteTime = 0
+    private var lastActivity: TimeInterval = 0
     private var watchdog: DispatchSourceTimer?
     private let watchdogTimeout: CFTimeInterval = 0.6
 
@@ -36,7 +36,7 @@ final class CursorManager: CursorFreezing {
         lock.sync {
             guard !frozen else { return }
             pinnedPoint = CGEvent(source: nil)?.location ?? .zero
-            lastActivity = CFAbsoluteTimeGetCurrent()
+            lastActivity = ProcessInfo.processInfo.systemUptime
             frozen = true
             CGAssociateMouseAndMouseCursorPosition(0)
             startWatchdog()
@@ -51,7 +51,7 @@ final class CursorManager: CursorFreezing {
         }
         lock.sync {
             guard frozen else { return }
-            lastActivity = CFAbsoluteTimeGetCurrent()
+            lastActivity = ProcessInfo.processInfo.systemUptime
             if let current = CGEvent(source: nil)?.location,
                abs(current.x - pinnedPoint.x) > 0.5 || abs(current.y - pinnedPoint.y) > 0.5 {
                 CGWarpMouseCursorPosition(pinnedPoint)
@@ -86,7 +86,7 @@ final class CursorManager: CursorFreezing {
         timer.setEventHandler { [weak self] in
             guard let self else { return }
             self.lock.sync {
-                guard self.frozen, CFAbsoluteTimeGetCurrent() - self.lastActivity > self.watchdogTimeout else { return }
+                guard self.frozen, ProcessInfo.processInfo.systemUptime - self.lastActivity > self.watchdogTimeout else { return }
                 self.log.notice("Watchdog released a frozen cursor after touch frames stopped")
                 self.releaseLocked()
             }

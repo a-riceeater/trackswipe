@@ -24,7 +24,7 @@ final class GestureEngine {
     private var invertY = false
     private var enabled = true
     private var tickWork: DispatchWorkItem?
-    private var lastInspectorPublish: CFAbsoluteTime = 0
+    private var lastInspectorPublish: TimeInterval = 0
     private var inspectorHandler: ((InspectorSnapshot) -> Void)?
 
     init(dispatcher: ActionDispatcher) {
@@ -128,7 +128,7 @@ final class GestureEngine {
 
     private func publishInspector(device: TrackpadDevice, frame: TouchFrame, recognizer: GestureRecognizer) {
         guard let handler = inspectorHandler else { return }
-        let now = CFAbsoluteTimeGetCurrent()
+        let now = ProcessInfo.processInfo.systemUptime
         guard now - lastInspectorPublish > 1.0 / 30.0 else { return }
         lastInspectorPublish = now
         let snapshot = InspectorSnapshot(

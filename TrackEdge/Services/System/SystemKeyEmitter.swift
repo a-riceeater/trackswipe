@@ -24,7 +24,7 @@ final class SystemKeyEmitter {
 
     private let permissions: () -> Bool
     private let lock = NSLock()
-    private var cached: (value: Bool, at: CFAbsoluteTime)?
+    private var cached: (value: Bool, at: TimeInterval)?
 
     init(permissions: @escaping () -> Bool = { AXIsProcessTrusted() }) {
         self.permissions = permissions
@@ -32,7 +32,7 @@ final class SystemKeyEmitter {
 
     /// Accessibility trust, cached for one second (queried on every step of a slide).
     var isAvailable: Bool {
-        let now = CFAbsoluteTimeGetCurrent()
+        let now = ProcessInfo.processInfo.systemUptime
         if let cached = lock.sync({ cached }), now - cached.at < 1 { return cached.value }
         let value = permissions()
         lock.sync { cached = (value, now) }

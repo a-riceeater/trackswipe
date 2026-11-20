@@ -36,7 +36,7 @@ final class ActionDispatcher {
     private var activeDevice: UInt64?
     private var pendingSteps = 0
     private var pendingFine = false
-    private var lastWrite: CFAbsoluteTime = 0
+    private var lastWrite: TimeInterval = 0
     private var flushScheduled = false
 
     init(volume: LevelControlling & MuteControlling,
@@ -110,7 +110,7 @@ final class ActionDispatcher {
             if pendingSteps != 0 && pendingFine != fine { flush() }
             pendingSteps += steps
             pendingFine = fine
-            let elapsed = CFAbsoluteTimeGetCurrent() - lastWrite
+            let elapsed = ProcessInfo.processInfo.systemUptime - lastWrite
             if elapsed >= minimumWriteInterval {
                 flush()
             } else if !flushScheduled {
@@ -161,7 +161,7 @@ final class ActionDispatcher {
         guard pendingSteps != 0, let target = activeSlide else { return }
         let steps = pendingSteps
         pendingSteps = 0
-        lastWrite = CFAbsoluteTimeGetCurrent()
+        lastWrite = ProcessInfo.processInfo.systemUptime
         guard let result = controller(for: target).adjust(steps: steps, fine: pendingFine) else { return }
         if result.changed {
             haptics.perform(options.haptics, fine: pendingFine, on: activeDevice)

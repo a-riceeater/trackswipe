@@ -37,7 +37,7 @@ final class SystemOSDController {
 
     let preference: IndicatorPreference
     private let lock = NSLock()
-    private var lastShown: CFAbsoluteTime = 0
+    private var lastShown: TimeInterval = 0
 
     init(preference: IndicatorPreference) {
         self.preference = preference
@@ -60,7 +60,7 @@ final class SystemOSDController {
 
     /// Shows feedback for a new value. Throttled to ~30 Hz; safe to call from any thread.
     func show(_ kind: Kind, value: Double, display: CGDirectDisplayID? = nil) {
-        let now = CFAbsoluteTimeGetCurrent()
+        let now = ProcessInfo.processInfo.systemUptime
         let allowed: Bool = lock.sync {
             guard now - lastShown > 0.033 else { return false }
             lastShown = now

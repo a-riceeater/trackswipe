@@ -83,6 +83,13 @@ final class AppModel: ObservableObject {
     private var pollTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
     private var workspaceObservers: [NSObjectProtocol] = []
+    private var distributedObservers: [NSObjectProtocol] = []
+    /// Pending resume after wake / session switch; cancelled if the Mac suspends again first.
+    private var resumeWork: DispatchWorkItem?
+    /// Pending debounced trackpad reconnect (screen wake, unlock, post-wake check).
+    private var restartWork: DispatchWorkItem?
+    /// Keeps App Nap from throttling the main thread, which draws the on-screen indicator.
+    private var appNapActivity: NSObjectProtocol?
     private let log = Logger(subsystem: AppInfo.bundleIdentifier, category: "App")
 
     init(settings: AppSettings) {
@@ -104,6 +111,13 @@ final class AppModel: ObservableObject {
     func start() {
         // Recover from any previous crash that might have left association off.
         cursor.forceRelease()
+
+        // A menu-bar app with no visible window gets App Napped after a while, which delays the
+        // main-thread indicator while the background level changes keep working. Opt out (sleep still allowed).
+        appNapActivity = ProcessInfo.processInfo.beginActivity(
+            options: [.userInitiatedAllowingIdleSystemSleep, .latencyCritical],
+            reason: "Responding to trackpad edge gestures"
+        )
 
         dispatcher.onLevelChanged = { [weak self] target, _ in
             Task { @MainActor in self?.refreshLevel(target) }
@@ -147,6 +161,10 @@ final class AppModel: ObservableObject {
         audio.stopObserving()
         deviceWatcher?.stop()
         pollTimer?.invalidate()
+        resumeWork?.cancel()
+        restartWork?.cancel()
+        if let appNapActivity { ProcessInfo.processInfo.endActivity(appNapActivity) }
+        appNapActivity = nil
     }
 
     // MARK: - Settings → engine
@@ -211,6 +229,12 @@ final class AppModel: ObservableObject {
     }
 
     private func suspend(_ reason: String) {
+        // A resume scheduled by an earlier wake must not fire into this new sleep (or right after the
+        // next wake, before the trackpad is back), leaving stale device refs and no further restart.
+        resumeWork?.cancel()
+        resumeWork = nil
+        restartWork?.cancel()
+        restartWork = nil
         guard !isSuspended else { return }
         log.info("Suspending: \(reason, privacy: .public)")
         isSuspended = true
@@ -221,12 +245,38 @@ final class AppModel: ObservableObject {
     }
 
     private func resume(after delay: TimeInterval) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-            guard let self, self.isSuspended else { return }
-            self.isSuspended = false
-            self.startTrackpads()
-            self.refreshAll()
+        resumeWork?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            MainActor.assumeIsolated {
+                guard let self, self.isSuspended else { return }
+                self.resumeWork = nil
+                self.log.info("Resuming")
+                self.isSuspended = false
+                IndicatorHUD.shared.reset()
+                self.startTrackpads()
+                self.refreshAll()
+                // Trackpads can finish re-attaching after the first attempt; reconnect once more.
+                self.scheduleRestart(after: 3.0, reason: "post-wake check")
+            }
         }
+        resumeWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
+    }
+
+    /// Debounced reconnect to every trackpad. Used when the display wakes or the screen unlocks
+    /// without a full system sleep, where MultitouchSupport device refs can still go stale.
+    private func scheduleRestart(after delay: TimeInterval, reason: String) {
+        restartWork?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            MainActor.assumeIsolated {
+                guard let self, !self.isSuspended else { return }
+                self.restartWork = nil
+                self.log.info("Reconnecting trackpads: \(reason, privacy: .public)")
+                self.restartTrackpads()
+            }
+        }
+        restartWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
     }
 
     private func observeWorkspace() {
@@ -242,11 +292,28 @@ final class AppModel: ObservableObject {
         add(NSWorkspace.sessionDidResignActiveNotification) { [weak self] in self?.suspend("session inactive") }
         add(NSWorkspace.sessionDidBecomeActiveNotification) { [weak self] in self?.resume(after: 0.5) }
         add(NSWorkspace.screensDidSleepNotification) { [weak self] in self?.engine.cancelAll() }
+        add(NSWorkspace.activeSpaceDidChangeNotification) { IndicatorHUD.shared.activeSpaceChanged() }
+        // Locking the screen or display sleep never posts willSleep, so reconnect when the display returns.
+        add(NSWorkspace.screensDidWakeNotification) { [weak self] in
+            IndicatorHUD.shared.reset()
+            self?.scheduleRestart(after: 1.0, reason: "screens woke")
+        }
 
         let token = NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated { self?.refreshBrightness() }
+            MainActor.assumeIsolated {
+                IndicatorHUD.shared.reset()
+                self?.refreshBrightness()
+            }
         }
         workspaceObservers.append(token)
+
+        let unlock = DistributedNotificationCenter.default().addObserver(forName: Notification.Name("com.apple.screenIsUnlocked"), object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated {
+                IndicatorHUD.shared.reset()
+                self?.scheduleRestart(after: 0.5, reason: "screen unlocked")
+            }
+        }
+        distributedObservers.append(unlock)
     }
 
     // MARK: - Visibility-scoped polling
@@ -332,24 +399,40 @@ final class AppModel: ObservableObject {
         return ok
     }
 
+    /// How long to keep listening for the player's broadcast. Spotify Connect (playing on another
+    /// device) round-trips through Spotify's servers and often reports well after 0.8 s.
+    private static let playbackReportWindow: TimeInterval = 3.0
+
     /// Next/previous show immediately, then update in place with the new song if Spotify/Music reports
-    /// it. Play/pause waits up to 0.5 s for the resulting state ("Playing"/"Paused"); other players get
-    /// the neutral labels.
+    /// it. Play/pause waits up to 0.5 s for the resulting state ("Playing"/"Paused"), shows the neutral
+    /// label if none arrived, and still updates in place if a late report comes in.
     private func showMediaFeedback(_ command: MediaCommand, sentAt: Date) {
+        let after = sentAt.addingTimeInterval(-0.05)
+        let logLatency: (PlaybackObserver.Event) -> Void = { [log] event in
+            log.info("Playback report from \(event.app, privacy: .public) \(event.date.timeIntervalSince(sentAt), format: .fixed(precision: 2)) s after the command")
+        }
         guard command == .playPause else {
             IndicatorHUD.shared.show(command)
-            playback.waitForChange(after: sentAt.addingTimeInterval(-0.05), timeout: 0.8) { event in
-                if let event, let content = IndicatorHUD.Content(skip: command, event: event) {
+            playback.waitForChange(after: after, timeout: Self.playbackReportWindow) { event in
+                guard let event else { return }
+                logLatency(event)
+                if let content = IndicatorHUD.Content(skip: command, event: event) {
                     IndicatorHUD.shared.show(content)
                 }
             }
             return
         }
-        playback.waitForChange(after: sentAt.addingTimeInterval(-0.05), timeout: 0.5) { event in
+        playback.waitForChange(after: after, timeout: 0.5) { [playback] event in
             if let event {
+                logLatency(event)
                 IndicatorHUD.shared.show(IndicatorHUD.Content(event))
             } else {
                 IndicatorHUD.shared.show(.playPause)
+                playback.waitForChange(after: after, timeout: Self.playbackReportWindow - 0.5) { late in
+                    guard let late else { return }
+                    logLatency(late)
+                    IndicatorHUD.shared.show(IndicatorHUD.Content(late))
+                }
             }
         }
     }

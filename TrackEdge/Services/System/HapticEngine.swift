@@ -55,7 +55,7 @@ final class HapticEngine: HapticPerforming {
     private let lock = NSLock()
     private var actuators: [UInt64: CFTypeRef] = [:]
     private var support: [UInt64: Support] = [:]
-    private var lastFire: CFAbsoluteTime = 0
+    private var lastFire: TimeInterval = 0
     /// Upper bound on tick rate so fast slides feel like discrete detents rather than a buzz.
     private let minimumInterval: CFTimeInterval = 0.028
     /// Quarter steps arrive faster; space their ticks further apart so they never blur into a buzz.
@@ -120,7 +120,7 @@ final class HapticEngine: HapticPerforming {
 
     private func actuate(_ actuationID: Int32, fine: Bool, publicPattern pattern: NSHapticFeedbackManager.FeedbackPattern,
                          on deviceID: UInt64?, throttle: Bool = true) {
-        let now = CFAbsoluteTimeGetCurrent()
+        let now = ProcessInfo.processInfo.systemUptime
         let interval = fine ? minimumFineInterval : minimumInterval
         let target: (actuator: CFTypeRef?, support: Support) = lock.sync {
             guard !throttle || now - lastFire >= interval else { return (nil, .unsupported) }
